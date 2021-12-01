@@ -10,7 +10,6 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import AccountCircle from '@mui/icons-material/AccountCircle';
 
 export default function AppBanner() {
     const { auth } = useContext(AuthContext);
@@ -33,61 +32,8 @@ export default function AppBanner() {
     }
 
     const menuId = 'primary-search-account-menu';
+
     const loggedOutMenu = (
-        <Menu
-            anchorEl={anchorEl}
-            anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
-            id={menuId}
-            keepMounted
-            transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
-            open={isMenuOpen}
-            onClose={handleMenuClose}
-        >
-            <MenuItem onClick={handleMenuClose}><Link to='/login/'>Login</Link></MenuItem>
-            <MenuItem onClick={handleMenuClose}><Link to='/register/'>Create New Account</Link></MenuItem>
-        </Menu>
-    );
-    const loggedInMenu = 
-        <Menu
-            anchorEl={anchorEl}
-            anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
-            id={menuId}
-            keepMounted
-            transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
-            open={isMenuOpen}
-            onClose={handleMenuClose}
-        >
-            <MenuItem onClick={handleLogout}>Logout</MenuItem>
-        </Menu>        
-
-    let editToolbar = "";
-    let menu = loggedOutMenu;
-    if (auth.loggedIn) {
-        menu = loggedInMenu;
-        if (store.currentList) {
-            editToolbar = <EditToolbar />;
-        }
-    }
-    
-    function getAccountMenu(loggedIn) {
-        if (loggedIn)
-            return auth.user.firstName.charAt(0).toUpperCase() + auth.user.lastName.charAt(0).toUpperCase()
-        return <AccountCircle />;
-    }
-
-    return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static">
                 <Toolbar>
@@ -99,7 +45,24 @@ export default function AppBanner() {
                     >
                         <Link style={{ textDecoration: 'none', color: 'white' }} to='/'>T<sup>5</sup>L</Link>
                     </Typography>
-                    <Box sx={{ flexGrow: 1 }}>{editToolbar}</Box>
+                </Toolbar>
+            </AppBar>
+        </Box>
+    );
+
+    const loggedInMenu = (
+        <Box sx={{ flexGrow: 1 }}>
+            <AppBar position="static">
+                <Toolbar>
+                    <Typography                        
+                        variant="h4"
+                        noWrap
+                        component="div"
+                        sx={{ display: { xs: 'none', sm: 'block' } }}                        
+                    >
+                        <Link style={{ textDecoration: 'none', color: 'white' }} to='/'>T<sup>5</sup>L</Link>
+                    </Typography>
+                    <Box sx={{ flexGrow: 1 }}>{getEditToolbar()}</Box>
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                         <IconButton
                             size="large"
@@ -110,14 +73,38 @@ export default function AppBanner() {
                             onClick={handleProfileMenuOpen}
                             color="inherit"
                         >
-                            { getAccountMenu(auth.loggedIn) }
+                            { getAccountMenu() }
                         </IconButton>
                     </Box>
                 </Toolbar>
             </AppBar>
-            {
-                menu
-            }
+            <Menu
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+                id={menuId}
+                keepMounted
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+                open={isMenuOpen}
+                onClose={handleMenuClose}
+            >
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            </Menu>
         </Box>
-    );
+    );   
+
+    function getEditToolbar() {
+        return (auth.loggedIn && store.currentList) ? <EditToolbar/> : "";
+    }
+    
+    function getAccountMenu() {
+        return auth.loggedIn ? auth.user.firstName.charAt(0).toUpperCase() + auth.user.lastName.charAt(0).toUpperCase() : "";
+    }
+
+    return auth.loggedIn ? loggedInMenu : loggedOutMenu;
 }
