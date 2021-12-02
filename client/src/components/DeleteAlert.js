@@ -3,7 +3,7 @@ import { GlobalStoreContext } from '../store';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -25,9 +25,9 @@ export default function DeleteAlert(props) {
     };
   
     return (
-        <Box sx={{ p: 1 }}>
-            <IconButton onClick={(event) => handleClickOpen(event)} aria-label='delete'>
-                <DeleteIcon style={{fontSize:'48pt'}} />
+        <Box>
+            <IconButton style={{color: 'black'}} onClick={(event) => handleClickOpen(event)} aria-label='delete'>
+                <DeleteOutlinedIcon style={{fontSize:'24pt'}} />
             </IconButton>
             <Dialog
                 open={open}

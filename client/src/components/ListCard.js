@@ -1,5 +1,6 @@
 import { useContext, useState } from 'react';
 import { GlobalStoreContext } from '../store';
+import AuthContext from '../auth';
 import DeleteAlert from './DeleteAlert.js';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
@@ -7,6 +8,15 @@ import ListItem from '@mui/material/ListItem';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import Typography from '@mui/material/Typography';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
+import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
+import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
 
 /*
     This is a card in our list of top 5 lists. It lets select
@@ -16,6 +26,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
     @author McKilla Gorilla
 */
 function ListCard(props) {
+    const { auth } = useContext(AuthContext);
     const { store } = useContext(GlobalStoreContext);
     const [editActive, setEditActive] = useState(false);
     const [text, setText] = useState("");
@@ -63,6 +74,96 @@ function ListCard(props) {
     function handleUpdateText(event) {
         setText(event.target.value);
     }
+
+    function handleLike(event) {
+        event.stopPropagation();
+        event.preventDefault();
+    }
+
+    function handleDislike(event) {
+        event.stopPropagation();
+        event.preventDefault();
+    }
+
+    const car = (
+        <Grid container columns={2} justifyContent="space-between">
+            <Grid item>
+                <Grid container columns={1} direction="column">
+                    <Grid item>
+                        <Typography>{idNamePair.name}</Typography>
+                    </Grid>
+                    <Grid item>
+                        <Typography>By: {auth.user.firstName + " " + auth.user.lastName}</Typography>
+                    </Grid>
+                    <Grid item>
+                        <Typography>Edit</Typography>
+                    </Grid>
+                </Grid>
+            </Grid>
+            <Grid item>
+                <Grid container columns={3} direction="column">
+                    <Grid container columns={3} direction="row">
+                        <Grid item>
+                            <Button 
+                                style={{fontSize:'16pt', color: 'black'}} 
+                                variant="text"
+                                onClick={handleLike} 
+                                startIcon={<ThumbUpOutlinedIcon style={{fontSize:'24pt'}}/>}
+                            >
+                                -99M
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button 
+                                style={{fontSize:'16pt', color: 'black'}} 
+                                variant="text"
+                                onClick={handleDislike} 
+                                startIcon={<ThumbDownOutlinedIcon style={{fontSize:'24pt'}}/>}
+                            >
+                                99M
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <DeleteAlert
+                                idNamePair={idNamePair}
+                                handleToggleDelete={handleToggleDelete}
+                                handleDeleteList={handleDeleteList}
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid container columns={3} direction="row">
+                        <Grid item>
+                            <Typography>views: 0</Typography>
+                        </Grid>
+                        <Grid item>
+                            <Typography></Typography>
+                        </Grid>
+                        <Grid item>
+                            <Typography></Typography>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
+    );
+
+    const card = (
+        <Accordion
+            id={idNamePair._id}
+            key={idNamePair._id}
+        >
+            <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+            >
+                {car}
+            </AccordionSummary>
+            <AccordionDetails>
+                Show Lists
+            </AccordionDetails>
+        </Accordion>
+    );
 
     let cardElement =
         <ListItem
@@ -113,7 +214,7 @@ function ListCard(props) {
             />
     }
     return (
-        cardElement
+        card
     );
 }
 

@@ -1,11 +1,9 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { GlobalStoreContext } from '../store'
 import ListCard from './ListCard.js'
-import { Button, Fab, Typography } from '@mui/material'
-import AddIcon from '@mui/icons-material/Add';
 import List from '@mui/material/List';
 import SortIcon from '@mui/icons-material/Sort';
-import {Box, TextField, Grid} from '@mui/material';
+import {Box, TextField, Grid, Button, Menu, MenuItem} from '@mui/material';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
@@ -17,14 +15,39 @@ import FunctionsOutlinedIcon from '@mui/icons-material/FunctionsOutlined';
 */
 const HomeScreen = () => {
     const { store } = useContext(GlobalStoreContext);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const isMenuOpen = Boolean(anchorEl);
 
     useEffect(() => {
         store.loadIdNamePairs();
     }, []);
 
-    function handleCreateNewList() {
-        store.createNewList();
+    function handleSortOpen(event) {
+        setAnchorEl(event.currentTarget);
     }
+
+    function handleSortClose() {
+        setAnchorEl(null);
+    }
+
+    function handleSort(by) {
+        handleSortClose();
+        switch (by) {
+            case 'new':
+                break;
+            case 'old':
+                break;
+            case 'views':
+                break;
+            case 'likes':
+                break;
+            case 'dislikes':
+                break;
+            default:
+                break;
+        }
+    }
+
     let listCard = "";
     if (store && store.currentUser) {
         let pairs = store.idNamePairs.filter(pair => pair.email === store.currentUser.email);
@@ -43,7 +66,7 @@ const HomeScreen = () => {
     }
 
     const navBar = (
-        <Grid container direction="row" justifyContent="space-around">
+        <Grid container columns={3} direction="row" justifyContent="space-around">
             <Grid item>
                 <Box>
                     <Button style={{color: 'black'}}> <HomeOutlinedIcon style={{fontSize:'36pt'}}/> </Button>
@@ -63,7 +86,29 @@ const HomeScreen = () => {
                 </Box>
             </Grid>
             <Grid item>
-                <Button style={{fontSize:'16pt', color: 'black'}} variant="text" endIcon={<SortIcon style={{fontSize:'36pt'}}/>}>SORT BY</Button>
+                <Button 
+                    style={{fontSize:'16pt', color: 'black'}} 
+                    variant="text"
+                    onClick={handleSortOpen} 
+                    endIcon={<SortIcon style={{fontSize:'36pt'}}/>}
+                >
+                    SORT BY
+                </Button>
+                <Menu
+                    anchorEl={anchorEl}
+                    anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                    id="sort-menu"
+                    keepMounted
+                    transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                    open={isMenuOpen}
+                    onClose={handleSortClose}
+                >
+                    <MenuItem onClick={() => handleSort('new')}>Publish Date (Newest)</MenuItem>
+                    <MenuItem onClick={() => handleSort('old')}>Publish Date (Oldest)</MenuItem>
+                    <MenuItem onClick={() => handleSort('views')}>Views</MenuItem>
+                    <MenuItem onClick={() => handleSort('likes')}>Likes</MenuItem>
+                    <MenuItem onClick={() => handleSort('dislikes')}>Dislikes</MenuItem>
+                </Menu>
             </Grid>
         </Grid>
     );
@@ -73,12 +118,9 @@ const HomeScreen = () => {
             {/* tabs, search, sort */}
             <div id="list-selector-heading">
                 {navBar}
-                {/* tabs, search, sort */}
             </div>
             <div id="list-selector-list">
-                {
-                    listCard
-                }
+                {listCard}
             </div>
         </div>)
 }
