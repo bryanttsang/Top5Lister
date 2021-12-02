@@ -7,13 +7,13 @@ import Box from '@mui/material/Box';
 import ListItem from '@mui/material/ListItem';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Grid from '@mui/material/Grid';
+import List from '@mui/material/List';
 import Button from '@mui/material/Button';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
@@ -29,6 +29,7 @@ function ListCard(props) {
     const { auth } = useContext(AuthContext);
     const { store } = useContext(GlobalStoreContext);
     const [editActive, setEditActive] = useState(false);
+    const [expanded, setExpanded] = useState(false);
     const [text, setText] = useState("");
     const { idNamePair } = props;
 
@@ -37,6 +38,10 @@ function ListCard(props) {
             // CHANGE THE CURRENT LIST
             store.setCurrentList(id);
         }
+    }
+
+    function handleChange(index) {
+        setExpanded(expanded ? index : false);
     }
 
     function handleToggleEdit(event) {
@@ -85,7 +90,7 @@ function ListCard(props) {
         event.preventDefault();
     }
 
-    const car = (
+    const closed = (
         <Grid container columns={2} justifyContent="space-between">
             <Grid item>
                 <Grid container columns={1} direction="column">
@@ -135,87 +140,88 @@ function ListCard(props) {
                         <Grid item>
                             <Typography>views: 0</Typography>
                         </Grid>
-                        <Grid item>
-                            <Typography></Typography>
-                        </Grid>
-                        <Grid item>
-                            <Typography></Typography>
-                        </Grid>
                     </Grid>
                 </Grid>
             </Grid>
         </Grid>
     );
 
+    let editItems = "";
+    if (store.currentList) {
+        editItems = (
+            <Grid container columns={2} direction="row">
+                <Grid item>
+                    <Grid container columns={1} direction="column" minWidth='50pt'>
+                        {
+                            store.currentList.items.map((item, index) => (
+                                <Grid item>
+                                    <Typography>{index+1}.</Typography>
+                                </Grid>
+                            ))
+                        }
+                    </Grid>
+                </Grid>
+                <Grid item>
+                    <Grid container columns={1} direction="column">
+                        {
+                            store.currentList.items.map((item) => (
+                                <Grid item>
+                                    <Typography>{item}</Typography>
+                                </Grid>
+                            ))
+                        }
+                    </Grid>
+                </Grid>
+            </Grid>
+        );
+    }
+
     const card = (
         <Accordion
             id={idNamePair._id}
             key={idNamePair._id}
+            onClick={(event) => handleLoadList(event, idNamePair._id)}
         >
             <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
             >
-                {car}
+                {closed}
             </AccordionSummary>
             <AccordionDetails>
-                Show Lists
+                {editItems}
             </AccordionDetails>
         </Accordion>
     );
 
-    let cardElement =
-        <ListItem
-            id={idNamePair._id}
-            key={idNamePair._id}
-            sx={{ marginTop: '15px', display: 'flex', p: 1 }}
-            button
-            onClick={(event) => {
-                handleLoadList(event, idNamePair._id)
-            }
-            }
-            style={{
-                fontSize: '48pt',
-                width: '100%'
-            }}
-        >
-            <Box sx={{ p: 1, flexGrow: 1 }}>{idNamePair.name}</Box>
-            <Box sx={{ p: 1 }}>
-                <IconButton onClick={handleToggleEdit} aria-label='edit'>
-                    <EditIcon style={{fontSize:'48pt'}} />
-                </IconButton>
-            </Box>
-            <DeleteAlert
-                idNamePair={idNamePair}
-                handleToggleDelete={handleToggleDelete}
-                handleDeleteList={handleDeleteList}
-            />
-        </ListItem>
+    // let cardElement =
+    //     <ListItem
+    //         id={idNamePair._id}
+    //         key={idNamePair._id}
+    //         sx={{ marginTop: '15px', display: 'flex', p: 1 }}
+    //         button
+    //         onClick={(event) => {
+    //             handleLoadList(event, idNamePair._id)
+    //         }
+    //         }
+    //         style={{
+    //             fontSize: '48pt',
+    //             width: '100%'
+    //         }}
+    //     >
+    //         <Box sx={{ p: 1, flexGrow: 1 }}>{idNamePair.name}</Box>
+    //         <Box sx={{ p: 1 }}>
+    //             <IconButton onClick={handleToggleEdit} aria-label='edit'>
+    //                 <EditIcon style={{fontSize:'48pt'}} />
+    //             </IconButton>
+    //         </Box>
+    //         <DeleteAlert
+    //             idNamePair={idNamePair}
+    //             handleToggleDelete={handleToggleDelete}
+    //             handleDeleteList={handleDeleteList}
+    //         />
+    //     </ListItem>
 
-    if (editActive) {
-        cardElement =
-            <TextField
-                margin="normal"
-                required
-                fullWidth
-                id={"list-" + idNamePair._id}
-                label="Top 5 List Name"
-                name="name"
-                autoComplete="Top 5 List Name"
-                className='list-card'
-                onKeyPress={handleKeyPress}
-                onChange={handleUpdateText}
-                defaultValue={idNamePair.name}
-                inputProps={{style: {fontSize: 48}}}
-                InputLabelProps={{style: {fontSize: 24}}}
-                autoFocus
-                onFocus={e => e.target.select()}
-            />
-    }
-    return (
-        card
-    );
+    return card;
 }
 
 export default ListCard;

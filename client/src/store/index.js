@@ -303,8 +303,15 @@ function GlobalStoreContextProvider(props) {
                     type: GlobalStoreActionType.SET_CURRENT_LIST,
                     payload: top5List
                 });
-                history.push("/top5list/" + top5List._id);
+                //history.push("/top5list/" + top5List._id);
             }
+        }
+    }
+
+    store.getList = async function (id) {
+        let response = await api.getTop5ListById(id);
+        if (response.data.success) {
+            return response.data.top5List;
         }
     }
 
