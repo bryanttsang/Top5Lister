@@ -96,9 +96,9 @@ body {
 #top5-list-selector {
   position: absolute;
   left: 0%;
-  top: 10%;
+  top: 20%;
   width: 100%;
-  height: 80%;
+  height: 75%;
   background-color: var(--swatch-primary);
 }
 
@@ -159,7 +159,7 @@ body {
 #list-selector-list {
   position: absolute;
   left: 0%;
-  top: 10%;
+  top: 0%;
   width: 100%;
   height: 90%;
   display: flex;
