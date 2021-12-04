@@ -241,7 +241,11 @@ function GlobalStoreContextProvider(props) {
         let payload = {
             name: newListName,
             items: ["?", "?", "?", "?", "?"],
-            ownerEmail: auth.user.email
+            ownerEmail: auth.user.email,
+            like: [],
+            dislike: [],
+            view: 0,
+            comment: []
         };
         const response = await api.createTop5List(payload);
         if (response.data.success) {
@@ -335,6 +339,56 @@ function GlobalStoreContextProvider(props) {
                 });
                 //history.push("/top5list/" + top5List._id);
             }
+        }
+    }
+
+    store.like = async function (id) {
+        const listIndex = store.allList.findIndex(list => list._id === id);
+        let list = store.allList[listIndex];
+        let dislike = list.dislike;
+        for (let i = 0; i < dislike.length; i++) {
+            if (dislike[i] === id) {
+                dislike.splice(i, 1);
+            }
+        }
+        let like = list.like;
+        if (like.includes(id)) {
+            like.splice(like.indexOf(id), 1);
+        }
+        else {
+            like.push(id);
+        }
+        list.dislike = dislike;
+        list.like = like;
+
+        const response = await api.updateTop5ListById(id, list);
+        if (response.data.success) {
+            store.loadIdNamePairs();
+        }
+    }
+
+    store.dislike = async function (id) {
+        const listIndex = store.allList.findIndex(list => list._id === id);
+        let list = store.allList[listIndex];
+        let like = list.like;
+        for (let i = 0; i < like.length; i++) {
+            if (like[i] === id) {
+                like.splice(i, 1);
+            }
+        }
+        let dislike = list.dislike;
+        if (dislike.includes(id)) {
+            dislike.splice(dislike.indexOf(id), 1);
+        }
+        else {
+            dislike.push(id);
+        }
+        list.like = like;
+        list.dislike = dislike;
+
+        const response = await api.updateTop5ListById(id, list);
+        if (response.data.success) {
+            store.loadIdNamePairs();
         }
     }
 

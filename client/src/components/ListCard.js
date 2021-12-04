@@ -33,6 +33,8 @@ function ListCard(props) {
     const [expanded, setExpanded] = useState(false);
     const [text, setText] = useState("");
     const { idNamePair } = props;
+    const listIndex = store.allList.findIndex(list => list._id === idNamePair._id);
+    const list = store.allList[listIndex];
 
     function handleLoadList(event, id) {
         if (!event.target.disabled) {
@@ -87,14 +89,15 @@ function ListCard(props) {
 
     function handleLike(event) {
         event.stopPropagation();
-        event.preventDefault();
+        store.like(idNamePair._id);
     }
 
     function handleDislike(event) {
         event.stopPropagation();
-        event.preventDefault();
+        store.dislike(idNamePair._id);
     }
 
+    
     const closed = (
         <Grid container columns={2} justifyContent="space-between">
             <Grid item>
@@ -120,7 +123,7 @@ function ListCard(props) {
                                 onClick={handleLike} 
                                 startIcon={<ThumbUpOutlinedIcon style={{fontSize:'24pt'}}/>}
                             >
-                                -99M
+                                {list.like.length}
                             </Button>
                         </Grid>
                         <Grid item>
@@ -130,7 +133,7 @@ function ListCard(props) {
                                 onClick={handleDislike} 
                                 startIcon={<ThumbDownOutlinedIcon style={{fontSize:'24pt'}}/>}
                             >
-                                99M
+                                {list.dislike.length}
                             </Button>
                         </Grid>
                         <Grid item>
@@ -152,7 +155,6 @@ function ListCard(props) {
     );
 
     let editItems = "";
-    let listIndex = store.allList.findIndex(list => list._id === idNamePair._id);
     if (0 <= listIndex && listIndex < store.allList.length) {
         editItems = (
             <Grid container columns={2} direction="row" justifyContent="space-between">
