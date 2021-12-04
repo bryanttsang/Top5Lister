@@ -37,10 +37,13 @@ function ListCard(props) {
     const list = store.allList[listIndex];
 
     function handleLoadList(event, id) {
-        if (!event.target.disabled) {
-            // CHANGE THE CURRENT LIST
-            store.setCurrentList(id);
-        }
+        event.stopPropagation();
+        store.setCurrentList(id);
+    }
+
+    function handleUser(event, user) {
+        event.stopPropagation();
+        // bring to user's page
     }
 
     function handleExpand() {
@@ -103,13 +106,30 @@ function ListCard(props) {
             <Grid item>
                 <Grid container columns={1} direction="column">
                     <Grid item>
-                        <Typography>{idNamePair.name}</Typography>
+                        <Typography variant='h5'>{idNamePair.name}</Typography>
                     </Grid>
                     <Grid item>
-                        <Typography>By: {auth.user.firstName + " " + auth.user.lastName}</Typography>
+                        <Box style={{display:"flex"}}>
+                            <Typography>By: </Typography>
+                            <Typography
+                                style={{
+                                    textDecoration: 'underline',
+                                    color: 'blue'
+                                }}
+                                onClick={(event) => handleUser(event, auth.user.firstName + "_" + auth.user.lastName)}
+                            >
+                                {auth.user.firstName + " " + auth.user.lastName}
+                            </Typography>
+                        </Box>
                     </Grid>
                     <Grid item>
-                        <Typography>Edit</Typography>
+                        <Typography
+                            onClick={(event) => handleLoadList(event, idNamePair._id)}
+                            color='red'
+                            style={{textDecoration: 'underline'}}
+                        >
+                            Edit
+                        </Typography>
                     </Grid>
                 </Grid>
             </Grid>
@@ -154,66 +174,63 @@ function ListCard(props) {
         </Grid>
     );
 
-    let editItems = "";
-    if (0 <= listIndex && listIndex < store.allList.length) {
-        editItems = (
-            <Grid container columns={2} direction="row" justifyContent="space-between">
-                <Grid item xs={1}>
-                    <Box sx={{m:1, p:1,border: 1, borderRadius: '5%', bgcolor:"navy"}}>
-                        <Grid container columns={2} direction="row">
-                            <Grid item>
-                                <Grid container columns={1} direction="column" minWidth='32pt'>
-                                    {
-                                        store.allList[listIndex].items.map((item, index) => (
-                                            <Grid item height="48pt" key={idNamePair._id + "index" + String(index+1)}>
-                                                <Typography variant="h4" style={{color: "yellow"}}>{index+1}.</Typography>
-                                            </Grid>
-                                        ))
-                                    }
-                                </Grid>
-                            </Grid>
-                            <Grid item>
-                                <Grid container columns={1} direction="column">
-                                    {
-                                        store.allList[listIndex].items.map((item, index) => (
-                                            <Grid item height="48pt" key={idNamePair._id + String(index+1)}>
-                                                <Typography variant="h4" style={{color: "yellow"}}>{item}</Typography>
-                                            </Grid>
-                                        ))
-                                    }
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                    </Box>
-                </Grid>
-                <Grid item xs={1}>
-                    <Box sx={{}}>
-                        <Grid container columns={2} direction="column">
-                            <Grid item style={{minHeight: '180pt', maxHeight: '200pt', overFlow: 'auto'}}>
+    const editItems = (
+        <Grid container columns={2} direction="row" justifyContent="space-between">
+            <Grid item xs={1}>
+                <Box sx={{m:1, p:1,border: 1, borderRadius: '5%', bgcolor:"navy"}}>
+                    <Grid container columns={2} direction="row">
+                        <Grid item>
+                            <Grid container columns={1} direction="column" minWidth='32pt'>
                                 {
-                                    [...Array(6).keys()].map((element) => (
-                                        <Box sx={{m:1, p:1, border: 1, borderRadius: '5%', bgcolor:"yellow"}} key={idNamePair._id + "comment" + String(element)}>
-                                            <Typography variant="caption">{"name " + String(element)}</Typography>
-                                            <Typography variant="body1">{"comment " + String(element)}</Typography>
-                                        </Box>
+                                    store.allList[listIndex].items.map((item, index) => (
+                                        <Grid item height="48pt" key={idNamePair._id + "index" + String(index+1)}>
+                                            <Typography variant="h4" style={{color: "yellow"}}>{index+1}.</Typography>
+                                        </Grid>
                                     ))
                                 }
                             </Grid>
-                            <Grid item>
-                                <TextField
-                                    margin="normal"
-                                    fullWidth
-                                    name="comment"
-                                    label="comment"
-                                    id="comment"
-                                />
+                        </Grid>
+                        <Grid item>
+                            <Grid container columns={1} direction="column">
+                                {
+                                    store.allList[listIndex].items.map((item, index) => (
+                                        <Grid item height="48pt" key={idNamePair._id + String(index+1)}>
+                                            <Typography variant="h4" style={{color: "yellow"}}>{item}</Typography>
+                                        </Grid>
+                                    ))
+                                }
                             </Grid>
                         </Grid>
-                    </Box>
-                </Grid>
+                    </Grid>
+                </Box>
             </Grid>
-        );
-    }
+            <Grid item xs={1}>
+                <Box sx={{}}>
+                    <Grid container columns={2} direction="column">
+                        <Grid item style={{minHeight: '180pt', maxHeight: '200pt', overFlow: 'auto'}}>
+                            {
+                                [...Array(6).keys()].map((element) => (
+                                    <Box sx={{m:1, p:1, border: 1, borderRadius: '5%', bgcolor:"yellow"}} key={idNamePair._id + "comment" + String(element)}>
+                                        <Typography variant="caption">{"name " + String(element)}</Typography>
+                                        <Typography variant="body1">{"comment " + String(element)}</Typography>
+                                    </Box>
+                                ))
+                            }
+                        </Grid>
+                        <Grid item>
+                            <TextField
+                                margin="normal"
+                                fullWidth
+                                name="comment"
+                                label="comment"
+                                id="comment"
+                            />
+                        </Grid>
+                    </Grid>
+                </Box>
+            </Grid>
+        </Grid>
+    );
     
     const card = (
         <Accordion

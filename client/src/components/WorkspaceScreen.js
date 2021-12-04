@@ -21,6 +21,17 @@ function WorkspaceScreen() {
         store.setCurrentList(currentList);
     }, []);
 
+    const handleSave = (event) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+        let list = store.currentList;
+        console.log(list);
+        list.name = formData.get('name');
+        list.items = [formData.get('item0'), formData.get('item1'), formData.get('item2'), formData.get('item3'), formData.get('item4')];
+        console.log(list);
+        store.editList(list._id, list);
+    }
+
     let editItems = "";
     if (store.currentList) {
         editItems = (
@@ -36,7 +47,7 @@ function WorkspaceScreen() {
                                             bgcolor:"yellow",
                                             p:1
                                         }} 
-                                        height="36pt"
+                                        height="52pt"
                                         key={ "index" + String(index+1)}
                                     >
                                         <Typography variant="h4" style={{color: "black"}}>{index+1}.</Typography>
@@ -55,10 +66,17 @@ function WorkspaceScreen() {
                                             bgcolor:"yellow",
                                             p:1,
                                         }} 
-                                        height="36pt"
+                                        height="52pt"
                                         key={ String(index+1)}
                                     >
-                                        <Typography variant="h4" style={{color: "black"}}>{item}</Typography>
+                                        <TextField
+                                            defaultValue={item}
+                                            InputProps={{style: {fontSize: 24}}}
+                                            fullWidth
+                                            size='small'
+                                            name={"item" + String(index)}
+                                        />
+                                        {/* <Typography variant="h4" style={{color: "black"}}>{item}</Typography> */}
                                     </Grid>
                                 ))
                             }
@@ -70,24 +88,26 @@ function WorkspaceScreen() {
     }
 
     return (
-        <div>
-            <div>
+        <Box component="form" noValidate onSubmit={handleSave}>
+            <Box>
                 <TextField
-                    id="outlined-size-small"
                     defaultValue={store.currentList.name}
-                    size="small"
+                    InputProps={{style: {fontSize: 24}}}
+                    fullWidth
+                    size='small'
+                    name="name"
                 />
-            </div>
-            <div>
+            </Box>
+            <Box>
                 {editItems}
-            </div>
-            <div>
-                <Box justifyContent="flex-end">
-                   <Button style={{color: 'black'}}>Save</Button>
+            </Box>
+            <Box>
+                <Box>
+                   <Button style={{color: 'black'}} type='submit'>Save</Button>
                    <Button style={{color: 'black'}}>Publish</Button>
                </Box>
-            </div>
-        </div>
+            </Box>
+        </Box>
     )
 }
 

@@ -265,6 +265,10 @@ function GlobalStoreContextProvider(props) {
         }
     }
 
+    store.openList = async function (id) {
+        history.push("/top5list/" + id);
+    }
+
     // THIS FUNCTION LOADS ALL THE ID, NAME PAIRS SO WE CAN LIST ALL THE LISTS
     store.loadIdNamePairs = async function () {
         const response = await api.getTop5ListPairs();
@@ -337,8 +341,16 @@ function GlobalStoreContextProvider(props) {
                     type: GlobalStoreActionType.SET_CURRENT_LIST,
                     payload: top5List
                 });
-                //history.push("/top5list/" + top5List._id);
+                history.push("/top5list/" + top5List._id);
             }
+        }
+    }
+
+    store.editList = async function (id, list) {
+        const response = await api.updateTop5ListById(id, list);
+        if (response.data.success) {
+            history.push('/');
+            store.loadIdNamePairs();
         }
     }
 
