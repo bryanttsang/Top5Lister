@@ -123,13 +123,24 @@ function ListCard(props) {
                         </Box>
                     </Grid>
                     <Grid item>
-                        <Typography
-                            onClick={(event) => handleLoadList(event, idNamePair._id)}
-                            color='red'
-                            style={{textDecoration: 'underline'}}
-                        >
-                            Edit
-                        </Typography>
+                        {
+                            store.allList[listIndex].publish === "false" ? (
+                                <Typography
+                                    onClick={(event) => handleLoadList(event, idNamePair._id)}
+                                    color='red'
+                                    style={{textDecoration: 'underline'}}
+                                >
+                                    Edit
+                                </Typography>
+                            ) : (
+                                <Typography
+                                    color='green'
+                                >
+                                    {store.allList[listIndex].publish}
+                                </Typography>
+                            )
+                        }
+                        
                     </Grid>
                 </Grid>
             </Grid>

@@ -25,11 +25,14 @@ function WorkspaceScreen() {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         let list = store.currentList;
-        console.log(list);
         list.name = formData.get('name');
         list.items = [formData.get('item0'), formData.get('item1'), formData.get('item2'), formData.get('item3'), formData.get('item4')];
-        console.log(list);
         store.editList(list._id, list);
+    }
+
+    function handlePublish() {
+        const day = new Date();
+        store.publish(day.getDate());
     }
 
     let editItems = "";
@@ -76,7 +79,6 @@ function WorkspaceScreen() {
                                             size='small'
                                             name={"item" + String(index)}
                                         />
-                                        {/* <Typography variant="h4" style={{color: "black"}}>{item}</Typography> */}
                                     </Grid>
                                 ))
                             }
@@ -104,7 +106,7 @@ function WorkspaceScreen() {
             <Box>
                 <Box>
                    <Button style={{color: 'black'}} type='submit'>Save</Button>
-                   <Button style={{color: 'black'}}>Publish</Button>
+                   <Button style={{color: 'black'}} type='submit' onClick={handlePublish}>Publish</Button>
                </Box>
             </Box>
         </Box>

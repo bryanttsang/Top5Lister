@@ -26,6 +26,7 @@ createTop5List = (req, res) => {
             })
         })
         .catch(error => {
+            console.log(error);
             return res.status(400).json({
                 error,
                 message: 'Top 5 List Not Created!'
@@ -58,6 +59,7 @@ updateTop5List = async (req, res) => {
         top5List.dislike = body.dislike
         top5List.comment = body.comment
         top5List.view = body.view
+        top5List.publish = body.publish
         top5List
             .save()
             .then(() => {

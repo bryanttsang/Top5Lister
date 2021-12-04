@@ -245,7 +245,8 @@ function GlobalStoreContextProvider(props) {
             like: [],
             dislike: [],
             view: 0,
-            comment: []
+            comment: [],
+            publish: "false"
         };
         const response = await api.createTop5List(payload);
         if (response.data.success) {
@@ -344,6 +345,15 @@ function GlobalStoreContextProvider(props) {
                 history.push("/top5list/" + top5List._id);
             }
         }
+    }
+
+    store.publish = function (day) {
+        let list = store.currentList;
+        list.publish = "Dec " + String(day) + ", 2021";
+        storeReducer({
+            type: GlobalStoreActionType.SET_CURRENT_LIST,
+            payload: list
+        });
     }
 
     store.editList = async function (id, list) {
