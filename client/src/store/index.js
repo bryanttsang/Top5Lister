@@ -176,14 +176,14 @@ function GlobalStoreContextProvider(props) {
             }
             case GlobalStoreActionType.GET_ALL_LIST: {
                 return setStore({
-                    idNamePairs: store.idNamePairs,
-                    currentList: store.currentList,
+                    idNamePairs: payload.pairsArray,
+                    currentList: null,
                     newListCounter: store.newListCounter,
-                    isListNameEditActive: store.isListNameEditActive,
-                    isItemEditActive: store.isItemEditActive,
-                    listMarkedForDeletion: store.listMarkedForDeletion,
+                    isListNameEditActive: false,
+                    isItemEditActive: false,
+                    listMarkedForDeletion: null,
                     currentUser: auth.user,
-                    allList: payload
+                    allList: payload.all
                 });
             }
             default:
@@ -266,11 +266,17 @@ function GlobalStoreContextProvider(props) {
         const response = await api.getTop5ListPairs();
         if (response.data.success) {
             let pairsArray = response.data.idNamePairs;
-            console.log(pairsArray);
-            storeReducer({
-                type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
-                payload: pairsArray
-            });
+            const rall = await api.getAllTop5Lists();
+            if (rall.data.success) {
+                let all = rall.data.data;
+                storeReducer({
+                    type: GlobalStoreActionType.GET_ALL_LIST,
+                    payload: {
+                        pairsArray: pairsArray,
+                        all: all
+                    }
+                });
+            }
         }
         else {
             console.log("API FAILED TO GET THE LIST PAIRS");
@@ -296,7 +302,6 @@ function GlobalStoreContextProvider(props) {
     store.deleteList = async function (listToDelete) {
         let response = await api.deleteTop5ListById(listToDelete._id);
         if (response.data.success) {
-            store.loadAll();
             store.loadIdNamePairs();
             history.push("/");
         }
@@ -330,16 +335,6 @@ function GlobalStoreContextProvider(props) {
                 });
                 //history.push("/top5list/" + top5List._id);
             }
-        }
-    }
-
-    store.loadAll = async function () {
-        let response = await api.getAllTop5Lists();
-        if (response.data.success) {
-            storeReducer({
-                type: GlobalStoreActionType.GET_ALL_LIST,
-                payload: response.data.data
-            });
         }
     }
 

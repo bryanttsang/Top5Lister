@@ -17,6 +17,7 @@ import List from '@mui/material/List';
 import Button from '@mui/material/Button';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
+import { typography } from '@mui/system';
 
 /*
     This is a card in our list of top 5 lists. It lets select
@@ -38,6 +39,10 @@ function ListCard(props) {
             // CHANGE THE CURRENT LIST
             store.setCurrentList(id);
         }
+    }
+
+    function handleExpand() {
+        store.loadIdNamePairs();
     }
 
     function handleChange(index) {
@@ -147,40 +152,72 @@ function ListCard(props) {
     );
 
     let editItems = "";
-    if (store.currentList) {
+    let listIndex = store.allList.findIndex(list => list._id === idNamePair._id);
+    if (0 <= listIndex && listIndex < store.allList.length) {
         editItems = (
-            <Grid container columns={2} direction="row">
-                <Grid item>
-                    <Grid container columns={1} direction="column" minWidth='50pt'>
-                        {
-                            store.currentList.items.map((item, index) => (
-                                <Grid item>
-                                    <Typography>{index+1}.</Typography>
+            <Grid container columns={2} direction="row" justifyContent="space-between">
+                <Grid item xs={1}>
+                    <Box sx={{m:1, p:1,border: 1, borderRadius: '5%', bgcolor:"navy"}}>
+                        <Grid container columns={2} direction="row">
+                            <Grid item>
+                                <Grid container columns={1} direction="column" minWidth='32pt'>
+                                    {
+                                        store.allList[listIndex].items.map((item, index) => (
+                                            <Grid item height="48pt" key={idNamePair._id + "index" + String(index+1)}>
+                                                <Typography variant="h4" style={{color: "yellow"}}>{index+1}.</Typography>
+                                            </Grid>
+                                        ))
+                                    }
                                 </Grid>
-                            ))
-                        }
-                    </Grid>
+                            </Grid>
+                            <Grid item>
+                                <Grid container columns={1} direction="column">
+                                    {
+                                        store.allList[listIndex].items.map((item, index) => (
+                                            <Grid item height="48pt" key={idNamePair._id + String(index+1)}>
+                                                <Typography variant="h4" style={{color: "yellow"}}>{item}</Typography>
+                                            </Grid>
+                                        ))
+                                    }
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </Box>
                 </Grid>
-                <Grid item>
-                    <Grid container columns={1} direction="column">
-                        {
-                            store.currentList.items.map((item) => (
-                                <Grid item>
-                                    <Typography>{item}</Typography>
-                                </Grid>
-                            ))
-                        }
-                    </Grid>
+                <Grid item xs={1}>
+                    <Box sx={{}}>
+                        <Grid container columns={2} direction="column">
+                            <Grid item style={{minHeight: '180pt', maxHeight: '200pt', overFlow: 'auto'}}>
+                                {
+                                    [...Array(6).keys()].map((element) => (
+                                        <Box sx={{m:1, p:1, border: 1, borderRadius: '5%', bgcolor:"yellow"}} key={idNamePair._id + "comment" + String(element)}>
+                                            <Typography variant="caption">{"name " + String(element)}</Typography>
+                                            <Typography variant="body1">{"comment " + String(element)}</Typography>
+                                        </Box>
+                                    ))
+                                }
+                            </Grid>
+                            <Grid item>
+                                <TextField
+                                    margin="normal"
+                                    fullWidth
+                                    name="comment"
+                                    label="comment"
+                                    id="comment"
+                                />
+                            </Grid>
+                        </Grid>
+                    </Box>
                 </Grid>
             </Grid>
         );
     }
-
+    
     const card = (
         <Accordion
             id={idNamePair._id}
             key={idNamePair._id}
-            onClick={(event) => handleLoadList(event, idNamePair._id)}
+            onClick={handleExpand}
         >
             <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
@@ -192,34 +229,6 @@ function ListCard(props) {
             </AccordionDetails>
         </Accordion>
     );
-
-    // let cardElement =
-    //     <ListItem
-    //         id={idNamePair._id}
-    //         key={idNamePair._id}
-    //         sx={{ marginTop: '15px', display: 'flex', p: 1 }}
-    //         button
-    //         onClick={(event) => {
-    //             handleLoadList(event, idNamePair._id)
-    //         }
-    //         }
-    //         style={{
-    //             fontSize: '48pt',
-    //             width: '100%'
-    //         }}
-    //     >
-    //         <Box sx={{ p: 1, flexGrow: 1 }}>{idNamePair.name}</Box>
-    //         <Box sx={{ p: 1 }}>
-    //             <IconButton onClick={handleToggleEdit} aria-label='edit'>
-    //                 <EditIcon style={{fontSize:'48pt'}} />
-    //             </IconButton>
-    //         </Box>
-    //         <DeleteAlert
-    //             idNamePair={idNamePair}
-    //             handleToggleDelete={handleToggleDelete}
-    //             handleDeleteList={handleDeleteList}
-    //         />
-    //     </ListItem>
 
     return card;
 }

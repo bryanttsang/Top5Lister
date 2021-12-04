@@ -17,7 +17,6 @@ const HomeScreen = () => {
     const { store } = useContext(GlobalStoreContext);
 
     useEffect(() => {
-        store.loadAll();
         store.loadIdNamePairs();
     }, []);
 
@@ -31,7 +30,6 @@ const HomeScreen = () => {
                     <ListCard
                         key={pair._id}
                         idNamePair={pair}
-                        selected={false}
                     />
                 ))
             }
