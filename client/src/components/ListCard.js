@@ -46,12 +46,22 @@ function ListCard(props) {
         // bring to user's page
     }
 
-    function handleExpand() {
-        store.loadIdNamePairs();
+    function handleChange() {
+        if (!expanded) {
+            store.view(idNamePair._id);
+        }
+        setExpanded(!expanded);
     }
 
-    function handleChange(index) {
-        setExpanded(expanded ? index : false);
+    function handleComment(event) {
+        if (event.code === "Enter" && text.trim() !== "") {
+            store.comment(idNamePair._id, auth.user.firstName + " " + auth.user.lastName, text);
+            setText("");
+        }
+    }
+
+    function handleType(event) {
+        setText(event.target.value);
     }
 
     function handleToggleEdit(event) {
@@ -100,7 +110,6 @@ function ListCard(props) {
         store.dislike(idNamePair._id);
     }
 
-    
     const closed = (
         <Grid container columns={2} justifyContent="space-between">
             <Grid item>
@@ -110,7 +119,7 @@ function ListCard(props) {
                     </Grid>
                     <Grid item>
                         <Box style={{display:"flex"}}>
-                            <Typography>By: </Typography>
+                            <Typography>By:&nbsp;</Typography>
                             <Typography
                                 style={{
                                     textDecoration: 'underline',
@@ -124,7 +133,7 @@ function ListCard(props) {
                     </Grid>
                     <Grid item>
                         {
-                            store.allList[listIndex].publish === "false" ? (
+                            list.publish === 0 ? (
                                 <Typography
                                     onClick={(event) => handleLoadList(event, idNamePair._id)}
                                     color='red'
@@ -136,7 +145,7 @@ function ListCard(props) {
                                 <Typography
                                     color='green'
                                 >
-                                    {store.allList[listIndex].publish}
+                                    {"Dec " + list.publish + ", 2021"}
                                 </Typography>
                             )
                         }
@@ -177,7 +186,10 @@ function ListCard(props) {
                     </Grid>
                     <Grid container columns={3} direction="row">
                         <Grid item>
-                            <Typography>views: 0</Typography>
+                            <Box style={{display:"flex"}}>
+                                <Typography>Views:&nbsp;</Typography>
+                                <Typography style={{color: 'red'}}>{list.view}</Typography>
+                            </Box>
                         </Grid>
                     </Grid>
                 </Grid>
@@ -193,7 +205,7 @@ function ListCard(props) {
                         <Grid item>
                             <Grid container columns={1} direction="column" minWidth='32pt'>
                                 {
-                                    store.allList[listIndex].items.map((item, index) => (
+                                    list.items.map((item, index) => (
                                         <Grid item height="48pt" key={idNamePair._id + "index" + String(index+1)}>
                                             <Typography variant="h4" style={{color: "yellow"}}>{index+1}.</Typography>
                                         </Grid>
@@ -204,7 +216,7 @@ function ListCard(props) {
                         <Grid item>
                             <Grid container columns={1} direction="column">
                                 {
-                                    store.allList[listIndex].items.map((item, index) => (
+                                    list.items.map((item, index) => (
                                         <Grid item height="48pt" key={idNamePair._id + String(index+1)}>
                                             <Typography variant="h4" style={{color: "yellow"}}>{item}</Typography>
                                         </Grid>
@@ -218,15 +230,23 @@ function ListCard(props) {
             <Grid item xs={1}>
                 <Box sx={{}}>
                     <Grid container columns={2} direction="column">
-                        <Grid item style={{minHeight: '180pt', maxHeight: '200pt', overFlow: 'auto'}}>
+                        <Grid item>
+                            <div className="list-comment">
                             {
-                                [...Array(6).keys()].map((element) => (
-                                    <Box sx={{m:1, p:1, border: 1, borderRadius: '5%', bgcolor:"yellow"}} key={idNamePair._id + "comment" + String(element)}>
-                                        <Typography variant="caption">{"name " + String(element)}</Typography>
-                                        <Typography variant="body1">{"comment " + String(element)}</Typography>
+                                list.comment.map((item, index) => (
+                                    <Box sx={{m:1, p:1, border: 1, borderRadius: '5%', bgcolor:"yellow"}} key={idNamePair._id + "comment" + String(index)}>
+                                        <Typography variant="caption">{item.name}</Typography>
+                                        <Typography variant="body1">{item.comment}</Typography>
                                     </Box>
                                 ))
+                                // [...Array(6).keys()].map((element) => (
+                                //     <Box sx={{m:1, p:1, border: 1, borderRadius: '5%', bgcolor:"yellow"}} key={idNamePair._id + "comment" + String(element)}>
+                                //         <Typography variant="caption">{"name " + String(element)}</Typography>
+                                //         <Typography variant="body1">{"comment " + String(element)}</Typography>
+                                //     </Box>
+                                // ))
                             }
+                            </div>
                         </Grid>
                         <Grid item>
                             <TextField
@@ -235,6 +255,9 @@ function ListCard(props) {
                                 name="comment"
                                 label="comment"
                                 id="comment"
+                                value={text}
+                                onChange={(event) => handleType(event)}
+                                onKeyDown={(event) => handleComment(event)}
                             />
                         </Grid>
                     </Grid>
@@ -247,7 +270,7 @@ function ListCard(props) {
         <Accordion
             id={idNamePair._id}
             key={idNamePair._id}
-            onClick={handleExpand}
+            onChange={handleChange}
         >
             <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}

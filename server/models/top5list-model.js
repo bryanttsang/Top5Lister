@@ -8,9 +8,9 @@ const Top5ListSchema = new Schema(
         ownerEmail: { type: String, required: true},
         like: { type: [String], required: true },
         dislike: { type: [String], required: true },
-        comment: { type: [[String, String]], required: true },
+        comment: { type: [], required: true },
         view: { type: Number, required: true },
-        publish: {type: String, required: true}
+        publish: {type: Number, required: true}
     },
     { timestamps: true },
 )

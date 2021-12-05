@@ -37,11 +37,10 @@ const HomeScreen = () => {
     }
 
     return (
-        <div id="top5-list-selector">
-            <div id="list-selector-list">
-                {listCard}
-            </div>
-        </div>)
+        <div id="list-selector-list">
+            {listCard}
+        </div>
+    )
 }
 
 export default HomeScreen;

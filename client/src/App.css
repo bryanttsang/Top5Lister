@@ -159,11 +159,21 @@ body {
 #list-selector-list {
   position: absolute;
   left: 0%;
-  top: 0%;
+  top: 20%;
   width: 100%;
-  height: 90%;
+  height: 67%;
+  background-color: var(--swatch-primary);
   display: flex;
   flex-direction: column;
+  overflow: scroll;
+}
+
+.list-comment {
+  min-height: 200pt;
+  max-height: 200pt;
+  display: flex;
+  flex-direction: column;
+  scroll-snap-align: end;
   overflow: scroll;
 }
 
