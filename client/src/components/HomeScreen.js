@@ -23,7 +23,7 @@ const HomeScreen = () => {
     let listCard = "";
     if (store.currentUser) {
         let pairs = store.idNamePairs.filter(pair => pair.email === store.currentUser.email);
-        listCard = 
+        listCard = (
             <List sx={{ width: '90%', left: '5%', bgcolor: 'background.paper' }}>
             {
                 pairs.map((pair) => (
@@ -33,7 +33,8 @@ const HomeScreen = () => {
                     />
                 ))
             }
-            </List>;
+            </List>
+        );
     }
 
     return (

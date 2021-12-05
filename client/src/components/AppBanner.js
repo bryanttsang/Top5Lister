@@ -46,20 +46,7 @@ export default function AppBanner() {
 
     function handleSort(by) {
         handleSortClose();
-        switch (by) {
-            case 'new':
-                break;
-            case 'old':
-                break;
-            case 'views':
-                break;
-            case 'likes':
-                break;
-            case 'dislikes':
-                break;
-            default:
-                break;
-        }
+        store.sort(by);
     }
 
     const menuId = 'primary-search-account-menu';

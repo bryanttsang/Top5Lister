@@ -27,7 +27,8 @@ export const GlobalStoreActionType = {
     SET_CURRENT_LIST: "SET_CURRENT_LIST",
     SET_ITEM_EDIT_ACTIVE: "SET_ITEM_EDIT_ACTIVE",
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
-    GET_ALL_LIST: "GET_ALL_LIST"
+    GET_ALL_LIST: "GET_ALL_LIST",
+    SORT: "SORT"
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -45,7 +46,8 @@ function GlobalStoreContextProvider(props) {
         itemActive: false,
         listMarkedForDeletion: null,
         currentUser: null,
-        allList: []
+        allList: [],
+        sortBy: "new"
     });
     const history = useHistory();
 
@@ -67,7 +69,8 @@ function GlobalStoreContextProvider(props) {
                     isItemEditActive: false,
                     listMarkedForDeletion: null,
                     currentUser: auth.user,
-                    allList: store.allList
+                    allList: store.allList,
+                    sortBy: store.sortBy
                 });
             }
             // STOP EDITING THE CURRENT LIST
@@ -80,7 +83,8 @@ function GlobalStoreContextProvider(props) {
                     isItemEditActive: false,
                     listMarkedForDeletion: null,
                     currentUser: auth.user,
-                    allList: store.allList
+                    allList: store.allList,
+                    sortBy: store.sortBy
                 })
             }
             // CREATE A NEW LIST
@@ -93,7 +97,8 @@ function GlobalStoreContextProvider(props) {
                     isItemEditActive: false,
                     listMarkedForDeletion: null,
                     currentUser: auth.user,
-                    allList: store.allList
+                    allList: store.allList,
+                    sortBy: store.sortBy
                 })
             }
             // GET ALL THE LISTS SO WE CAN PRESENT THEM
@@ -106,7 +111,8 @@ function GlobalStoreContextProvider(props) {
                     isItemEditActive: false,
                     listMarkedForDeletion: null,
                     currentUser: auth.user,
-                    allList: store.allList
+                    allList: store.allList,
+                    sortBy: store.sortBy
                 });
             }
             // PREPARE TO DELETE A LIST
@@ -119,7 +125,8 @@ function GlobalStoreContextProvider(props) {
                     isItemEditActive: false,
                     listMarkedForDeletion: payload,
                     currentUser: auth.user,
-                    allList: store.allList
+                    allList: store.allList,
+                    sortBy: store.sortBy
                 });
             }
             // PREPARE TO DELETE A LIST
@@ -132,7 +139,8 @@ function GlobalStoreContextProvider(props) {
                     isItemEditActive: false,
                     listMarkedForDeletion: null,
                     currentUser: auth.user,
-                    allList: store.allList
+                    allList: store.allList,
+                    sortBy: store.sortBy
                 });
             }
             // UPDATE A LIST
@@ -145,7 +153,8 @@ function GlobalStoreContextProvider(props) {
                     isItemEditActive: false,
                     listMarkedForDeletion: null,
                     currentUser: auth.user,
-                    allList: store.allList
+                    allList: store.allList,
+                    sortBy: store.sortBy
                 });
             }
             // START EDITING A LIST ITEM
@@ -158,7 +167,8 @@ function GlobalStoreContextProvider(props) {
                     isItemEditActive: true,
                     listMarkedForDeletion: null,
                     currentUser: auth.user,
-                    allList: store.allList
+                    allList: store.allList,
+                    sortBy: store.sortBy
                 });
             }
             // START EDITING A LIST NAME
@@ -171,7 +181,8 @@ function GlobalStoreContextProvider(props) {
                     isItemEditActive: false,
                     listMarkedForDeletion: null,
                     currentUser: auth.user,
-                    allList: store.allList
+                    allList: store.allList,
+                    sortBy: store.sortBy
                 });
             }
             case GlobalStoreActionType.GET_ALL_LIST: {
@@ -183,7 +194,21 @@ function GlobalStoreContextProvider(props) {
                     isItemEditActive: false,
                     listMarkedForDeletion: null,
                     currentUser: auth.user,
-                    allList: payload.all
+                    allList: payload.all,
+                    sortBy: store.sortBy
+                });
+            }
+            case GlobalStoreActionType.SORT: {
+                return setStore({
+                    idNamePairs: payload.pairsArray,
+                    currentList: null,
+                    newListCounter: store.newListCounter,
+                    isListNameEditActive: false,
+                    isItemEditActive: false,
+                    listMarkedForDeletion: null,
+                    currentUser: auth.user,
+                    allList: payload.all,
+                    sortBy: payload.sortBy
                 });
             }
             default:
@@ -268,20 +293,104 @@ function GlobalStoreContextProvider(props) {
 
     // THIS FUNCTION LOADS ALL THE ID, NAME PAIRS SO WE CAN LIST ALL THE LISTS
     store.loadIdNamePairs = async function () {
-        const response = await api.getTop5ListPairs();
+        const response = await api.getAllTop5Lists();
         if (response.data.success) {
-            let pairsArray = response.data.idNamePairs;
-            const rall = await api.getAllTop5Lists();
-            if (rall.data.success) {
-                let all = rall.data.data;
-                storeReducer({
-                    type: GlobalStoreActionType.GET_ALL_LIST,
-                    payload: {
-                        pairsArray: pairsArray,
-                        all: all
-                    }
-                });
+            let all = response.data.data;
+            
+            // SORT
+            switch (store.sortBy) {
+                case 'new':
+                    all.sort((a, b) => (b.publish - a.publish));
+                    break;
+                case 'old':
+                    all.sort((a, b) => (a.publish - b.publish));
+                    break;
+                case 'views':
+                    all.sort((a, b) => (b.view - a.view));
+                    break;
+                case 'likes':
+                    all.sort((a, b) => (b.like.length - a.like.length));
+                    break;
+                case 'dislikes':
+                    all.sort((a, b) => (b.dislike.length - a.dislike.length));
+                    break;
+                default:
+                    all.sort((a, b) => (b.publish - a.publish));
+                    break;
             }
+
+            // MAKE PAIRS
+            let pairsArray = [];
+            for (let key in all) {
+                let list = all[key];
+                let pair = {
+                    _id: list._id,
+                    name: list.name,
+                    email: list.ownerEmail
+                };
+                pairsArray.push(pair);
+            }
+                
+            storeReducer({
+                type: GlobalStoreActionType.GET_ALL_LIST,
+                payload: {
+                    pairsArray: pairsArray,
+                    all: all
+                }
+            });
+        }
+        else {
+            console.log("API FAILED TO GET THE LIST PAIRS");
+        }
+    }
+
+    store.sort = async function (by) {
+        const response = await api.getAllTop5Lists();
+        if (response.data.success) {
+            let all = response.data.data;
+            
+            // SORT
+            switch (by) {
+                case 'new':
+                    all.sort((a, b) => (b.publish - a.publish));
+                    break;
+                case 'old':
+                    all.sort((a, b) => (a.publish - b.publish));
+                    break;
+                case 'views':
+                    all.sort((a, b) => (b.view - a.view));
+                    break;
+                case 'likes':
+                    all.sort((a, b) => (b.like.length - a.like.length));
+                    break;
+                case 'dislikes':
+                    all.sort((a, b) => (b.dislike.length - a.dislike.length));
+                    break;
+                default:
+                    all.sort((a, b) => (b.publish - a.publish));
+                    break;
+            }
+
+            // MAKE PAIRS
+            let pairsArray = [];
+            for (let key in all) {
+                let list = all[key];
+                let pair = {
+                    _id: list._id,
+                    name: list.name,
+                    email: list.ownerEmail
+                };
+                pairsArray.push(pair);
+            }
+                
+            storeReducer({
+                type: GlobalStoreActionType.SORT,
+                payload: {
+                    pairsArray: pairsArray,
+                    all: all,
+                    sortBy: by
+                }
+            });
         }
         else {
             console.log("API FAILED TO GET THE LIST PAIRS");
