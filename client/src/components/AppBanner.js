@@ -127,55 +127,53 @@ export default function AppBanner() {
     );
 
     const loggedInMenu = (
-        <div>
-            <Box sx={{ flexGrow: 1 }}>
-                <AppBar position="static">
-                    <Toolbar>
-                        <Typography                        
-                            variant="h4"
-                            noWrap
-                            component="div"
-                            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}                        
+        <Box sx={{ flexGrow: 1 }}>
+            <AppBar position="static">
+                <Toolbar>
+                    <Typography                        
+                        variant="h4"
+                        noWrap
+                        component="div"
+                        sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}                        
+                    >
+                        <Link style={{ textDecoration: 'none', color: 'white' }} to='/'>T<sup>5</sup>L</Link>
+                    </Typography>
+                    <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                        <IconButton
+                            size="large"
+                            edge="end"
+                            aria-label="account of current user"
+                            aria-controls={menuId}
+                            aria-haspopup="true"
+                            onClick={handleProfileMenuOpen}
+                            color="inherit"
                         >
-                            <Link style={{ textDecoration: 'none', color: 'white' }} to='/'>T<sup>5</sup>L</Link>
-                        </Typography>
-                        <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                            <IconButton
-                                size="large"
-                                edge="end"
-                                aria-label="account of current user"
-                                aria-controls={menuId}
-                                aria-haspopup="true"
-                                onClick={handleProfileMenuOpen}
-                                color="inherit"
-                            >
-                                { getAccountMenu() }
-                            </IconButton>
-                        </Box>
-                    </Toolbar>
-                    <Toolbar>
-                        {navBar}
-                    </Toolbar>
-                </AppBar>
-                <Menu
-                    anchorEl={anchorEl}
-                    anchorOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                    }}
-                    id={menuId}
-                    keepMounted
-                    transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                    }}
-                    open={isMenuOpen}
-                    onClose={handleMenuClose}
-                >
-                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
-                </Menu>
-            </Box>
-        </div>
+                            { getAccountMenu() }
+                        </IconButton>
+                    </Box>
+                </Toolbar>
+                <Toolbar>
+                    {navBar}
+                </Toolbar>
+            </AppBar>
+            <Menu
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+                id={menuId}
+                keepMounted
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+                open={isMenuOpen}
+                onClose={handleMenuClose}
+            >
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            </Menu>
+        </Box>
     );   
 
     function getAccountMenu() {

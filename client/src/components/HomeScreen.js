@@ -1,7 +1,8 @@
 import React, { useContext, useEffect } from 'react'
 import { GlobalStoreContext } from '../store'
 import ListCard from './ListCard.js'
-import List from '@mui/material/List';
+import { List, IconButton, Typography } from '@mui/material'
+import AddIcon from '@mui/icons-material/Add';
 /*
     This React component lists all the top5 lists in the UI.
     
@@ -13,6 +14,10 @@ const HomeScreen = () => {
     useEffect(() => {
         store.loadIdNamePairs();
     }, []);
+
+    function handleCreateNewList() {
+        store.createNewList();
+    }
 
     let listCard = "";
     if (store.currentUser) {
@@ -32,8 +37,20 @@ const HomeScreen = () => {
     }
 
     return (
-        <div id="list-selector-list">
-            {listCard}
+        <div>
+            <div id="list-selector-list">
+                {listCard}
+            </div>
+            <div id="statusbar-home">
+                <IconButton 
+                    aria-label="add"
+                    id="add-list-button"
+                    onClick={handleCreateNewList}
+                >
+                    <AddIcon style={{fontSize:'48pt', color:'#000000'}} />
+                </IconButton>
+                <Typography variant="h2">Your Lists</Typography>
+            </div>
         </div>
     )
 }

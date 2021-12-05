@@ -8,7 +8,6 @@ import {
     HomeWrapper,
     LoginScreen,
     RegisterScreen,
-    Statusbar,
     WorkspaceScreen,
     ListsScreen,
     UsersScreen,
@@ -40,7 +39,6 @@ const App = () => {
                         <Route path="/users/" exact component={UsersScreen} />
                         <Route path="/community/" exact component={CommunityScreen} />
                     </Switch>
-                    <Statusbar />
                 </GlobalStoreContextProvider>
             </AuthContextProvider>
         </BrowserRouter>
