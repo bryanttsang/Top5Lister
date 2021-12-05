@@ -36,6 +36,12 @@ export default function AppBanner() {
         auth.logoutUser();
     }
 
+    function handleSearch(event) {
+        if (event.code === "Enter") {
+            store.setSearch(event.target.value);
+        }
+    }
+
     function handleSortOpen(event) {
         setAnchorElSort(event.currentTarget);
     }
@@ -85,6 +91,7 @@ export default function AppBanner() {
                         id="filled-search"
                         label="Search"
                         type="search"
+                        onKeyDown={(event) => handleSearch(event)}
                     />
                 </Box>
             </Grid>

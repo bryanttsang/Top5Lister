@@ -283,7 +283,7 @@ function ListCard(props) {
         </Accordion>
     );
 
-    return card;
+    return idNamePair.name.toLowerCase().startsWith(store.search) ? card : <></>;
 }
 
 export default ListCard;

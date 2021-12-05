@@ -28,7 +28,8 @@ export const GlobalStoreActionType = {
     SET_ITEM_EDIT_ACTIVE: "SET_ITEM_EDIT_ACTIVE",
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
     GET_ALL_LIST: "GET_ALL_LIST",
-    SORT: "SORT"
+    SORT: "SORT",
+    SEARCH: "SEARCH"
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -47,7 +48,8 @@ function GlobalStoreContextProvider(props) {
         listMarkedForDeletion: null,
         currentUser: null,
         allList: [],
-        sortBy: "new"
+        sortBy: "new",
+        search: ""
     });
     const history = useHistory();
 
@@ -70,7 +72,8 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null,
                     currentUser: auth.user,
                     allList: store.allList,
-                    sortBy: store.sortBy
+                    sortBy: store.sortBy,
+                    search: store.search
                 });
             }
             // STOP EDITING THE CURRENT LIST
@@ -84,7 +87,8 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null,
                     currentUser: auth.user,
                     allList: store.allList,
-                    sortBy: store.sortBy
+                    sortBy: store.sortBy,
+                    search: store.search
                 })
             }
             // CREATE A NEW LIST
@@ -98,7 +102,8 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null,
                     currentUser: auth.user,
                     allList: store.allList,
-                    sortBy: store.sortBy
+                    sortBy: store.sortBy,
+                    search: store.search
                 })
             }
             // GET ALL THE LISTS SO WE CAN PRESENT THEM
@@ -112,7 +117,8 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null,
                     currentUser: auth.user,
                     allList: store.allList,
-                    sortBy: store.sortBy
+                    sortBy: store.sortBy,
+                    search: store.search
                 });
             }
             // PREPARE TO DELETE A LIST
@@ -126,7 +132,8 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: payload,
                     currentUser: auth.user,
                     allList: store.allList,
-                    sortBy: store.sortBy
+                    sortBy: store.sortBy,
+                    search: store.search
                 });
             }
             // PREPARE TO DELETE A LIST
@@ -140,7 +147,8 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null,
                     currentUser: auth.user,
                     allList: store.allList,
-                    sortBy: store.sortBy
+                    sortBy: store.sortBy,
+                    search: store.search
                 });
             }
             // UPDATE A LIST
@@ -154,7 +162,8 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null,
                     currentUser: auth.user,
                     allList: store.allList,
-                    sortBy: store.sortBy
+                    sortBy: store.sortBy,
+                    search: store.search
                 });
             }
             // START EDITING A LIST ITEM
@@ -168,7 +177,8 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null,
                     currentUser: auth.user,
                     allList: store.allList,
-                    sortBy: store.sortBy
+                    sortBy: store.sortBy,
+                    search: store.search
                 });
             }
             // START EDITING A LIST NAME
@@ -182,7 +192,8 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null,
                     currentUser: auth.user,
                     allList: store.allList,
-                    sortBy: store.sortBy
+                    sortBy: store.sortBy,
+                    search: store.search
                 });
             }
             case GlobalStoreActionType.GET_ALL_LIST: {
@@ -195,7 +206,8 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null,
                     currentUser: auth.user,
                     allList: payload.all,
-                    sortBy: store.sortBy
+                    sortBy: store.sortBy,
+                    search: store.search
                 });
             }
             case GlobalStoreActionType.SORT: {
@@ -208,7 +220,22 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null,
                     currentUser: auth.user,
                     allList: payload.all,
-                    sortBy: payload.sortBy
+                    sortBy: payload.sortBy,
+                    search: store.search
+                });
+            }
+            case GlobalStoreActionType.SEARCH: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: store.currentList,
+                    newListCounter: store.newListCounter,
+                    isListNameEditActive: false,
+                    isItemEditActive: false,
+                    listMarkedForDeletion: store.listMarkedForDeletion,
+                    currentUser: auth.user,
+                    allList: store.allList,
+                    sortBy: store.sortBy,
+                    search: payload
                 });
             }
             default:
@@ -395,6 +422,13 @@ function GlobalStoreContextProvider(props) {
         else {
             console.log("API FAILED TO GET THE LIST PAIRS");
         }
+    }
+
+    store.setSearch = function (word) {
+        storeReducer({
+            type: GlobalStoreActionType.SEARCH,
+            payload: word.toLowerCase()
+        });
     }
 
     // THE FOLLOWING 5 FUNCTIONS ARE FOR COORDINATING THE DELETION
