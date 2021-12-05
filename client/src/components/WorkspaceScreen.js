@@ -1,11 +1,9 @@
 import { useContext, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import Top5Item from './Top5Item.js'
-import List from '@mui/material/List';
 import { Typography } from '@mui/material'
 import { GlobalStoreContext } from '../store/index.js'
 import Grid from '@mui/material/Grid';
-import {Box, TextField,  Button, Menu, MenuItem} from '@mui/material';
+import {Box, TextField,  Button} from '@mui/material';
 /*
     This React component lets us edit a loaded list, which only
     happens when we are on the proper route.

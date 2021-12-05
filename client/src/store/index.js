@@ -320,54 +320,58 @@ function GlobalStoreContextProvider(props) {
 
     // THIS FUNCTION LOADS ALL THE ID, NAME PAIRS SO WE CAN LIST ALL THE LISTS
     store.loadIdNamePairs = async function () {
-        const response = await api.getAllTop5Lists();
-        if (response.data.success) {
-            let all = response.data.data;
-            
-            // SORT
-            switch (store.sortBy) {
-                case 'new':
-                    all.sort((a, b) => (b.publish - a.publish));
-                    break;
-                case 'old':
-                    all.sort((a, b) => (a.publish - b.publish));
-                    break;
-                case 'views':
-                    all.sort((a, b) => (b.view - a.view));
-                    break;
-                case 'likes':
-                    all.sort((a, b) => (b.like.length - a.like.length));
-                    break;
-                case 'dislikes':
-                    all.sort((a, b) => (b.dislike.length - a.dislike.length));
-                    break;
-                default:
-                    all.sort((a, b) => (b.publish - a.publish));
-                    break;
-            }
-
-            // MAKE PAIRS
-            let pairsArray = [];
-            for (let key in all) {
-                let list = all[key];
-                let pair = {
-                    _id: list._id,
-                    name: list.name,
-                    email: list.ownerEmail
-                };
-                pairsArray.push(pair);
-            }
+        try {
+            const response = await api.getAllTop5Lists();
+            if (response.data.success) {
+                let all = response.data.data;
                 
-            storeReducer({
-                type: GlobalStoreActionType.GET_ALL_LIST,
-                payload: {
-                    pairsArray: pairsArray,
-                    all: all
+                // SORT
+                switch (store.sortBy) {
+                    case 'new':
+                        all.sort((a, b) => (b.publish - a.publish));
+                        break;
+                    case 'old':
+                        all.sort((a, b) => (a.publish - b.publish));
+                        break;
+                    case 'views':
+                        all.sort((a, b) => (b.view - a.view));
+                        break;
+                    case 'likes':
+                        all.sort((a, b) => (b.like.length - a.like.length));
+                        break;
+                    case 'dislikes':
+                        all.sort((a, b) => (b.dislike.length - a.dislike.length));
+                        break;
+                    default:
+                        all.sort((a, b) => (b.publish - a.publish));
+                        break;
                 }
-            });
-        }
-        else {
-            console.log("API FAILED TO GET THE LIST PAIRS");
+
+                // MAKE PAIRS
+                let pairsArray = [];
+                for (let key in all) {
+                    let list = all[key];
+                    let pair = {
+                        _id: list._id,
+                        name: list.name,
+                        email: list.ownerEmail
+                    };
+                    pairsArray.push(pair);
+                }
+                    
+                storeReducer({
+                    type: GlobalStoreActionType.GET_ALL_LIST,
+                    payload: {
+                        pairsArray: pairsArray,
+                        all: all
+                    }
+                });
+            }
+            else {
+                console.log("API FAILED TO GET THE LIST PAIRS");
+            }
+        } catch (err) {
+            // console.log(err);
         }
     }
 
@@ -578,6 +582,10 @@ function GlobalStoreContextProvider(props) {
         if (response.data.success) {
             store.loadIdNamePairs();
         }
+    }
+
+    store.changeTab = function (tab) {
+        history.push(tab);
     }
 
     store.addMoveItemTransaction = function (start, end) {

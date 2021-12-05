@@ -4,20 +4,15 @@ import AuthContext from '../auth';
 import DeleteAlert from './DeleteAlert.js';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
-import ListItem from '@mui/material/ListItem';
-import IconButton from '@mui/material/IconButton';
-import EditIcon from '@mui/icons-material/Edit';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Grid from '@mui/material/Grid';
-import List from '@mui/material/List';
 import Button from '@mui/material/Button';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
-import { typography } from '@mui/system';
 
 /*
     This is a card in our list of top 5 lists. It lets select
@@ -29,7 +24,6 @@ import { typography } from '@mui/system';
 function ListCard(props) {
     const { auth } = useContext(AuthContext);
     const { store } = useContext(GlobalStoreContext);
-    const [editActive, setEditActive] = useState(false);
     const [expanded, setExpanded] = useState(false);
     const [text, setText] = useState("");
     const { idNamePair } = props;
@@ -64,21 +58,6 @@ function ListCard(props) {
         setText(event.target.value);
     }
 
-    function handleToggleEdit(event) {
-        event.stopPropagation();
-        event.preventDefault();
-        toggleEdit();
-    }
-
-    function toggleEdit() {
-        let newActive = !editActive;
-        if (newActive) {
-            store.setIsListNameEditActive();
-        }
-        setEditActive(newActive);
-        setText(idNamePair.name);
-    }
-
     function handleToggleDelete(event, id) {
         event.stopPropagation();
         store.markListForDeletion(id);
@@ -87,17 +66,6 @@ function ListCard(props) {
     function handleDeleteList(event) {
         event.stopPropagation();
         store.deleteMarkedList();
-    }
-
-    function handleKeyPress(event) {
-        if (event.code === "Enter") {
-            let id = event.target.id.substring("list-".length);
-            store.changeListName(id, text);
-            toggleEdit();
-        }
-    }
-    function handleUpdateText(event) {
-        setText(event.target.value);
     }
 
     function handleLike(event) {

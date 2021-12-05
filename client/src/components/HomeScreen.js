@@ -1,13 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { GlobalStoreContext } from '../store'
 import ListCard from './ListCard.js'
 import List from '@mui/material/List';
-import SortIcon from '@mui/icons-material/Sort';
-import {Box, TextField, Grid, Button, Menu, MenuItem} from '@mui/material';
-import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
-import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
-import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
-import FunctionsOutlinedIcon from '@mui/icons-material/FunctionsOutlined';
 /*
     This React component lists all the top5 lists in the UI.
     

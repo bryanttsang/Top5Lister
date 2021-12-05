@@ -7,8 +7,10 @@ import LoginScreen from './LoginScreen'
 import RegisterScreen from './RegisterScreen'
 import SplashScreen from './SplashScreen'
 import Statusbar from './Statusbar'
-import Top5Item from './Top5Item'
 import WorkspaceScreen from './WorkspaceScreen'
+import ListsScreen from './ListsScreen'
+import UsersScreen from './UsersScreen'
+import CommunityScreen from './CommunityScreen'
 /*
     This serves as a module so that we can import
     all the other components as we wish.
@@ -25,5 +27,7 @@ export {
     RegisterScreen,
     SplashScreen,
     Statusbar, 
-    Top5Item, 
-    WorkspaceScreen }
+    WorkspaceScreen,
+    ListsScreen,
+    UsersScreen,
+    CommunityScreen }

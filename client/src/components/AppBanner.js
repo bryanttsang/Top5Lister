@@ -2,7 +2,6 @@ import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom'
 import AuthContext from '../auth';
 import { GlobalStoreContext } from '../store'
-import EditToolbar from './EditToolbar'
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
@@ -55,6 +54,10 @@ export default function AppBanner() {
         store.sort(by);
     }
 
+    function handleTab(tab) {
+        store.changeTab(tab);
+    }
+
     const menuId = 'primary-search-account-menu';
 
     const loggedOutMenu = (
@@ -78,10 +81,10 @@ export default function AppBanner() {
         <Grid container columns={3} direction="row" justifyContent="space-around">
             <Grid item>
                 <Box>
-                    <Button style={{color: 'black'}}> <HomeOutlinedIcon style={{fontSize:'36pt'}}/> </Button>
-                    <Button style={{color: 'black'}}> <GroupsOutlinedIcon style={{fontSize:'36pt'}}/> </Button>
-                    <Button style={{color: 'black'}}> <PersonOutlinedIcon style={{fontSize:'36pt'}}/> </Button>
-                    <Button style={{color: 'black'}}> <FunctionsOutlinedIcon style={{fontSize:'36pt'}}/> </Button>
+                    <Button style={{color: 'black'}} onClick={() => handleTab("/")}> <HomeOutlinedIcon style={{fontSize:'36pt'}}/> </Button>
+                    <Button style={{color: 'black'}} onClick={() => handleTab("/lists/")}> <GroupsOutlinedIcon style={{fontSize:'36pt'}}/> </Button>
+                    <Button style={{color: 'black'}} onClick={() => handleTab("/users/")}> <PersonOutlinedIcon style={{fontSize:'36pt'}}/> </Button>
+                    <Button style={{color: 'black'}} onClick={() => handleTab("/community/")}> <FunctionsOutlinedIcon style={{fontSize:'36pt'}}/> </Button>
                 </Box>
             </Grid>
             <Grid item>
@@ -175,10 +178,6 @@ export default function AppBanner() {
         </div>
     );   
 
-    function getEditToolbar() {
-        return (auth.loggedIn && store.currentList) ? <EditToolbar/> : "";
-    }
-    
     function getAccountMenu() {
         return auth.loggedIn ? auth.user.firstName.charAt(0).toUpperCase() + auth.user.lastName.charAt(0).toUpperCase() : "";
     }
