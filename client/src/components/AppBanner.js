@@ -1,12 +1,13 @@
 import { useContext, useState } from 'react';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 import AuthContext from '../auth';
-import { GlobalStoreContext } from '../store'
+import { GlobalStoreContext } from '../store';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import {Box, Menu, MenuItem} from '@mui/material';
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 
 export default function AppBanner() {
     const { auth } = useContext(AuthContext);
@@ -38,10 +39,20 @@ export default function AppBanner() {
                         variant="h4"
                         noWrap
                         component="div"
-                        sx={{ display: { xs: 'none', sm: 'block' } }}                        
+                        sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}                      
                     >
                         <Link style={{ textDecoration: 'none', color: 'white' }} to='/'>T<sup>5</sup>L</Link>
                     </Typography>
+                    <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                        <IconButton
+                            size="large"
+                            edge="end"
+                            aria-label="account of current user"
+                            color="inherit"
+                        >
+                            <AccountCircleOutlinedIcon/>
+                        </IconButton>
+                    </Box>
                 </Toolbar>
             </AppBar>
         </Box>
@@ -95,7 +106,13 @@ export default function AppBanner() {
     );   
 
     function getAccountMenu() {
-        return auth.loggedIn ? auth.user.firstName.charAt(0).toUpperCase() + auth.user.lastName.charAt(0).toUpperCase() : "";
+        return (
+            auth.loggedIn && auth.user.username !== "nu11" ? (
+                auth.user.firstName.charAt(0).toUpperCase() + auth.user.lastName.charAt(0).toUpperCase()
+            ) : (
+                <AccountCircleOutlinedIcon/>
+            )
+        );
     }
 
     return auth.loggedIn ? loggedInMenu : loggedOutMenu;

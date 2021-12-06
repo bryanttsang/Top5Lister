@@ -4,6 +4,13 @@ import ListCard from './ListCard.js'
 import { List, IconButton, Typography } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add';
 import NavigationBar from './NavigationBar';
+import Toolbar from '@mui/material/Toolbar';
+import SortIcon from '@mui/icons-material/Sort';
+import {Box, TextField, Grid, Button} from '@mui/material';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
+import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
+import FunctionsOutlinedIcon from '@mui/icons-material/FunctionsOutlined';
 /*
     This React component lists all the top5 lists in the UI.
     
@@ -18,6 +25,10 @@ const HomeScreen = () => {
 
     function handleCreateNewList() {
         store.createNewList();
+    }
+
+    function handleTab(tab) {
+        store.changeTab(tab);
     }
 
     let listCard = "";
@@ -35,7 +46,47 @@ const HomeScreen = () => {
             }
             </List>
         );
-    return (
+
+    const guest = (
+        <div>
+            <Toolbar>
+                <Grid container columns={3} direction="row" justifyContent="space-around">
+                    <Grid item>
+                        <Box>
+                            <Button style={{color: 'gray'}} disabled> <HomeOutlinedIcon style={{fontSize:'36pt'}}/> </Button>
+                            <Button style={{color: 'black'}} onClick={() => handleTab("/lists/")}> <GroupsOutlinedIcon style={{fontSize:'36pt'}}/> </Button>
+                            <Button style={{color: 'black'}} onClick={() => handleTab("/users/")}> <PersonOutlinedIcon style={{fontSize:'36pt'}}/> </Button>
+                            <Button style={{color: 'black'}} onClick={() => handleTab("/community/")}> <FunctionsOutlinedIcon style={{fontSize:'36pt'}}/> </Button>
+                        </Box>
+                    </Grid>
+                    <Grid item>
+                        <Box sx={{ width: '250pt', maxWidth:'100%', padding:1}}>
+                            <TextField
+                                fullWidth
+                                id="filled-search"
+                                label="Search"
+                                type="search"
+                                size="small"
+                                disabled
+                            />
+                        </Box>
+                    </Grid>
+                    <Grid item>
+                        <Button 
+                            style={{fontSize:'16pt', color: 'black'}} 
+                            variant="text"
+                            disabled
+                            endIcon={<SortIcon style={{fontSize:'36pt'}}/>}
+                        >
+                            SORT BY
+                        </Button>
+                    </Grid>
+                </Grid>
+            </Toolbar>
+        </div>
+    )
+
+    const user = (
         <div>
             <NavigationBar/>
             <div id="list-selector-list">
@@ -53,6 +104,8 @@ const HomeScreen = () => {
             </div>
         </div>
     )
+
+    return store.currentUser && store.currentUser.username === "nu11" ? guest : user;
 }
 
 export default HomeScreen;

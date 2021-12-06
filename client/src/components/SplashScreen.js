@@ -1,9 +1,22 @@
+import { useContext } from 'react'
+import AuthContext from '../auth'
+import { GlobalStoreContext } from '../store';
 import { Button } from '@mui/material';
 import { Box } from '@mui/material';
 import { Typography } from '@mui/material';
 import { Grid } from '@mui/material';
 
 export default function SplashScreen() {
+    const { auth } = useContext(AuthContext);
+    const { store } = useContext(GlobalStoreContext);
+
+    function handleGuest() {
+        auth.loginUser({
+            email: 'nu11',
+            password: 'guestguest'
+        }, store);
+    }
+    
     return (
         <div id="splash-screen">
             <div>
@@ -39,7 +52,7 @@ export default function SplashScreen() {
                         <Button style={{minWidth: 200}} variant="contained" href="/login/">Login</Button>
                     </Grid>
                     <Grid item>
-                        <Button style={{minWidth: 200}} variant="contained" href="/#">Continue as Guest</Button>
+                        <Button style={{minWidth: 200}} variant="contained" onClick={handleGuest}>Continue as Guest</Button>
                     </Grid>
                 </Grid>
             </div>

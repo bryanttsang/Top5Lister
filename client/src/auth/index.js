@@ -112,7 +112,11 @@ function AuthContextProvider(props) {
                         loggedIn: true
                     }
                 });
-                history.push("/");
+                if (response.data.user.username === "nu11") {
+                    history.push("/community/");
+                } else {
+                    history.push("/");
+                }
                 store.loadIdNamePairs();
             }
         } catch (err) {

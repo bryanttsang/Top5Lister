@@ -1,5 +1,6 @@
 import { useContext, useState } from 'react';
-import { GlobalStoreContext } from '../store'
+import { GlobalStoreContext } from '../store';
+import AuthContext from '../auth';
 import Toolbar from '@mui/material/Toolbar';
 import SortIcon from '@mui/icons-material/Sort';
 import {Box, TextField, Grid, Button, Menu, MenuItem} from '@mui/material';
@@ -40,12 +41,23 @@ export default function NavigationBar() {
         <Toolbar>
             <Grid container columns={3} direction="row" justifyContent="space-around">
                 <Grid item>
-                    <Box>
-                        <Button style={{color: 'black'}} onClick={() => handleTab("/")}> <HomeOutlinedIcon style={{fontSize:'36pt'}}/> </Button>
-                        <Button style={{color: 'black'}} onClick={() => handleTab("/lists/")}> <GroupsOutlinedIcon style={{fontSize:'36pt'}}/> </Button>
-                        <Button style={{color: 'black'}} onClick={() => handleTab("/users/")}> <PersonOutlinedIcon style={{fontSize:'36pt'}}/> </Button>
-                        <Button style={{color: 'black'}} onClick={() => handleTab("/community/")}> <FunctionsOutlinedIcon style={{fontSize:'36pt'}}/> </Button>
-                    </Box>
+                    {
+                        store.currentUser && store.currentUser.username === "nu11" ? (
+                            <Box>
+                                <Button style={{color: 'gray'}} disabled> <HomeOutlinedIcon style={{fontSize:'36pt'}}/> </Button>
+                                <Button style={{color: 'black'}} onClick={() => handleTab("/lists/")}> <GroupsOutlinedIcon style={{fontSize:'36pt'}}/> </Button>
+                                <Button style={{color: 'black'}} onClick={() => handleTab("/users/")}> <PersonOutlinedIcon style={{fontSize:'36pt'}}/> </Button>
+                                <Button style={{color: 'black'}} onClick={() => handleTab("/community/")}> <FunctionsOutlinedIcon style={{fontSize:'36pt'}}/> </Button>
+                            </Box>
+                        ) : (
+                            <Box>
+                                <Button style={{color: 'black'}} onClick={() => handleTab("/")}> <HomeOutlinedIcon style={{fontSize:'36pt'}}/> </Button>
+                                <Button style={{color: 'black'}} onClick={() => handleTab("/lists/")}> <GroupsOutlinedIcon style={{fontSize:'36pt'}}/> </Button>
+                                <Button style={{color: 'black'}} onClick={() => handleTab("/users/")}> <PersonOutlinedIcon style={{fontSize:'36pt'}}/> </Button>
+                                <Button style={{color: 'black'}} onClick={() => handleTab("/community/")}> <FunctionsOutlinedIcon style={{fontSize:'36pt'}}/> </Button>
+                            </Box>
+                        )
+                    }
                 </Grid>
                 <Grid item>
                     <Box sx={{ width: '250pt', maxWidth:'100%', padding:1}}>

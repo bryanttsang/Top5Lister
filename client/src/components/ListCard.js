@@ -129,24 +129,51 @@ function ListCard(props) {
                 <Grid container columns={3} direction="column">
                     <Grid container columns={3} direction="row">
                         <Grid item>
-                            <Button 
-                                style={liked} 
-                                variant="text"
-                                onClick={handleLike} 
-                                startIcon={<ThumbUpOutlinedIcon style={{fontSize:'24pt'}}/>}
-                            >
-                                {list.like.length}
-                            </Button>
+                            {
+                                store.currentUser && store.currentUser.username === "nu11" ? (
+                                    <Button 
+                                        style={{fontSize:'16pt', color: 'black'}}
+                                        variant="text"
+                                        disabled
+                                        startIcon={<ThumbUpOutlinedIcon style={{fontSize:'24pt'}}/>}
+                                    >
+                                        {list.like.length}
+                                    </Button>
+                                ) : (
+                                    <Button 
+                                        style={liked} 
+                                        variant="text"
+                                        onClick={handleLike} 
+                                        startIcon={<ThumbUpOutlinedIcon style={{fontSize:'24pt'}}/>}
+                                    >
+                                        {list.like.length}
+                                    </Button>
+                                )
+                            }
                         </Grid>
                         <Grid item>
-                            <Button 
-                                style={disliked} 
-                                variant="text"
-                                onClick={handleDislike} 
-                                startIcon={<ThumbDownOutlinedIcon style={{fontSize:'24pt'}}/>}
-                            >
-                                {list.dislike.length}
-                            </Button>
+                            {
+                                store.currentUser && store.currentUser.username === "nu11" ? (
+                                    <Button 
+                                        style={{fontSize:'16pt', color: 'black'}}
+                                        variant="text"
+                                        disabled
+                                        startIcon={<ThumbDownOutlinedIcon style={{fontSize:'24pt'}}/>}
+                                    >
+                                        {list.dislike.length}
+                                    </Button>
+                                ) : (
+                                    <Button 
+                                        style={disliked} 
+                                        variant="text"
+                                        onClick={handleDislike} 
+                                        startIcon={<ThumbDownOutlinedIcon style={{fontSize:'24pt'}}/>}
+                                    >
+                                        {list.dislike.length}
+                                    </Button>
+                                )
+                            }
+                            
                         </Grid>
                         <Grid item>
                             {
@@ -221,16 +248,30 @@ function ListCard(props) {
                             </div>
                         </Grid>
                         <Grid item>
-                            <TextField
-                                margin="normal"
-                                fullWidth
-                                name="comment"
-                                label="comment"
-                                id="comment"
-                                value={text}
-                                onChange={(event) => handleType(event)}
-                                onKeyDown={(event) => handleComment(event)}
-                            />
+                            {
+                                store.currentUser && store.currentUser.username === "nu11" ? (
+                                    <TextField
+                                        margin="normal"
+                                        fullWidth
+                                        name="comment"
+                                        label="comment"
+                                        id="comment"
+                                        value=""
+                                        disabled
+                                    />
+                                ) : (
+                                    <TextField
+                                        margin="normal"
+                                        fullWidth
+                                        name="comment"
+                                        label="comment"
+                                        id="comment"
+                                        value={text}
+                                        onChange={(event) => handleType(event)}
+                                        onKeyDown={(event) => handleComment(event)}
+                                    />
+                                )
+                            }
                         </Grid>
                     </Grid>
                 </Box>
