@@ -314,7 +314,7 @@ function GlobalStoreContextProvider(props) {
             dislike: [],
             view: 0,
             comment: [],
-            publish: 0
+            publish: Date.now() - 1638316800000
         };
         const response = await api.createTop5List(payload);
         if (response.data.success) {

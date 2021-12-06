@@ -29,8 +29,7 @@ function WorkspaceScreen() {
     }
 
     function handlePublish() {
-        const day = new Date();
-        store.publish(day.getDate());
+        store.publish(Date.now());
     }
 
     let editItems = "";

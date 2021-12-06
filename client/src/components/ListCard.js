@@ -104,7 +104,7 @@ function ListCard(props) {
                     </Grid>
                     <Grid item>
                         {
-                            list.publish === 0 ? (
+                            list.publish < 1638316800000 ? (
                                 <Typography
                                     onClick={(event) => handleLoadList(event, idNamePair._id)}
                                     color='red'
@@ -116,7 +116,7 @@ function ListCard(props) {
                                 <Typography
                                     color='green'
                                 >
-                                    {"Dec " + list.publish + ", 2021"}
+                                    {new Date(list.publish).toDateString().substring(4)}
                                 </Typography>
                             )
                         }
