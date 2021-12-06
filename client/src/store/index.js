@@ -354,7 +354,8 @@ function GlobalStoreContextProvider(props) {
                     let pair = {
                         _id: list._id,
                         name: list.name,
-                        email: list.ownerEmail
+                        email: list.ownerEmail,
+                        publish: list.publish
                     };
                     pairsArray.push(pair);
                 }
@@ -409,7 +410,8 @@ function GlobalStoreContextProvider(props) {
                 let pair = {
                     _id: list._id,
                     name: list.name,
-                    email: list.ownerEmail
+                    email: list.ownerEmail,
+                    publish: list.publish
                 };
                 pairsArray.push(pair);
             }
@@ -586,6 +588,7 @@ function GlobalStoreContextProvider(props) {
 
     store.changeTab = function (tab) {
         history.push(tab);
+        store.setSearch("");
     }
 
     store.addMoveItemTransaction = function (start, end) {

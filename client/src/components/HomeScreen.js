@@ -3,6 +3,7 @@ import { GlobalStoreContext } from '../store'
 import ListCard from './ListCard.js'
 import { List, IconButton, Typography } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add';
+import NavigationBar from './NavigationBar';
 /*
     This React component lists all the top5 lists in the UI.
     
@@ -38,10 +39,11 @@ const HomeScreen = () => {
 
     return (
         <div>
+            <NavigationBar/>
             <div id="list-selector-list">
                 {listCard}
             </div>
-            <div id="statusbar-home">
+            <div id="statusbar">
                 <IconButton 
                     aria-label="add"
                     id="add-list-button"
