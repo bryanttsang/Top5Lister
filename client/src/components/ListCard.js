@@ -49,7 +49,7 @@ function ListCard(props) {
 
     function handleComment(event) {
         if (event.code === "Enter" && text.trim() !== "") {
-            store.comment(idNamePair._id, auth.user.firstName + " " + auth.user.lastName, text);
+            store.comment(idNamePair._id, auth.user.username, text);
             setText("");
         }
     }
@@ -70,12 +70,12 @@ function ListCard(props) {
 
     function handleLike(event) {
         event.stopPropagation();
-        store.like(idNamePair._id);
+        store.like(idNamePair._id, auth.user.username);
     }
 
     function handleDislike(event) {
         event.stopPropagation();
-        store.dislike(idNamePair._id);
+        store.dislike(idNamePair._id, auth.user.username);
     }
 
     const closed = (
@@ -93,9 +93,9 @@ function ListCard(props) {
                                     textDecoration: 'underline',
                                     color: 'blue'
                                 }}
-                                onClick={(event) => handleUser(event, auth.user.firstName + "_" + auth.user.lastName)}
+                                onClick={(event) => handleUser(event, list.username)}
                             >
-                                {auth.user.firstName + " " + auth.user.lastName}
+                                {list.username}
                             </Typography>
                         </Box>
                     </Grid>
@@ -207,12 +207,6 @@ function ListCard(props) {
                                         <Typography variant="body1">{item.comment}</Typography>
                                     </Box>
                                 ))
-                                // [...Array(6).keys()].map((element) => (
-                                //     <Box sx={{m:1, p:1, border: 1, borderRadius: '5%', bgcolor:"yellow"}} key={idNamePair._id + "comment" + String(element)}>
-                                //         <Typography variant="caption">{"name " + String(element)}</Typography>
-                                //         <Typography variant="body1">{"comment " + String(element)}</Typography>
-                                //     </Box>
-                                // ))
                             }
                             </div>
                         </Grid>
@@ -234,7 +228,7 @@ function ListCard(props) {
         </Grid>
     );
     
-    const card = (
+    return (
         <Accordion
             id={idNamePair._id}
             key={idNamePair._id}
@@ -250,8 +244,6 @@ function ListCard(props) {
             </AccordionDetails>
         </Accordion>
     );
-
-    return idNamePair.name.toLowerCase().startsWith(store.search) ? card : <></>;
 }
 
 export default ListCard;

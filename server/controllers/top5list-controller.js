@@ -145,6 +145,7 @@ getTop5ListPairs = async (req, res) => {
                     _id: list._id,
                     name: list.name,
                     email: list.ownerEmail,
+                    username: list.username,
                     publish: list.publish
                 };
                 pairs.push(pair);

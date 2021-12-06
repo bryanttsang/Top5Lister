@@ -29,7 +29,8 @@ export const GlobalStoreActionType = {
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
     GET_ALL_LIST: "GET_ALL_LIST",
     SORT: "SORT",
-    SEARCH: "SEARCH"
+    SEARCH: "SEARCH",
+    TAB: "TAB"
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -238,6 +239,20 @@ function GlobalStoreContextProvider(props) {
                     search: payload
                 });
             }
+            case GlobalStoreActionType.TAB: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: store.currentList,
+                    newListCounter: store.newListCounter,
+                    isListNameEditActive: false,
+                    isItemEditActive: false,
+                    listMarkedForDeletion: store.listMarkedForDeletion,
+                    currentUser: auth.user,
+                    allList: store.allList,
+                    sortBy: "new",
+                    search: ""
+                });
+            }
             default:
                 return store;
         }
@@ -294,6 +309,7 @@ function GlobalStoreContextProvider(props) {
             name: newListName,
             items: ["?", "?", "?", "?", "?"],
             ownerEmail: auth.user.email,
+            username: auth.user.username,
             like: [],
             dislike: [],
             view: 0,
@@ -355,6 +371,7 @@ function GlobalStoreContextProvider(props) {
                         _id: list._id,
                         name: list.name,
                         email: list.ownerEmail,
+                        username: list.username,
                         publish: list.publish
                     };
                     pairsArray.push(pair);
@@ -411,6 +428,7 @@ function GlobalStoreContextProvider(props) {
                     _id: list._id,
                     name: list.name,
                     email: list.ownerEmail,
+                    username: list.username,
                     publish: list.publish
                 };
                 pairsArray.push(pair);
@@ -509,21 +527,21 @@ function GlobalStoreContextProvider(props) {
         }
     }
 
-    store.like = async function (id) {
+    store.like = async function (id, user) {
         const listIndex = store.allList.findIndex(list => list._id === id);
         let list = store.allList[listIndex];
         let dislike = list.dislike;
         for (let i = 0; i < dislike.length; i++) {
-            if (dislike[i] === id) {
+            if (dislike[i] === user) {
                 dislike.splice(i, 1);
             }
         }
         let like = list.like;
-        if (like.includes(id)) {
-            like.splice(like.indexOf(id), 1);
+        if (like.includes(user)) {
+            like.splice(like.indexOf(user), 1);
         }
         else {
-            like.push(id);
+            like.push(user);
         }
         list.dislike = dislike;
         list.like = like;
@@ -534,21 +552,21 @@ function GlobalStoreContextProvider(props) {
         }
     }
 
-    store.dislike = async function (id) {
+    store.dislike = async function (id, user) {
         const listIndex = store.allList.findIndex(list => list._id === id);
         let list = store.allList[listIndex];
         let like = list.like;
         for (let i = 0; i < like.length; i++) {
-            if (like[i] === id) {
+            if (like[i] === user) {
                 like.splice(i, 1);
             }
         }
         let dislike = list.dislike;
-        if (dislike.includes(id)) {
-            dislike.splice(dislike.indexOf(id), 1);
+        if (dislike.includes(user)) {
+            dislike.splice(dislike.indexOf(user), 1);
         }
         else {
-            dislike.push(id);
+            dislike.push(user);
         }
         list.like = like;
         list.dislike = dislike;
@@ -588,7 +606,10 @@ function GlobalStoreContextProvider(props) {
 
     store.changeTab = function (tab) {
         history.push(tab);
-        store.setSearch("");
+        storeReducer({
+            type: GlobalStoreActionType.TAB,
+            payload: null
+        });
     }
 
     store.addMoveItemTransaction = function (start, end) {

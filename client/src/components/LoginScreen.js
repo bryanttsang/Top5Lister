@@ -77,7 +77,7 @@ export default function LoginScreen() {
                                 required
                                 fullWidth
                                 id="email"
-                                label="Email Address"
+                                label="Email Address or Username"
                                 name="email"
                                 autoComplete="email"
                                 autoFocus

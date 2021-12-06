@@ -21,8 +21,7 @@ const HomeScreen = () => {
     }
 
     let listCard = "";
-    if (store.currentUser) {
-        let pairs = store.idNamePairs.filter(pair => pair.email === store.currentUser.email);
+        let pairs = store.idNamePairs.filter(pair => pair.email === store.currentUser.email && pair.name.toLowerCase().startsWith(store.search));
         listCard = (
             <List sx={{ width: '90%', left: '5%', bgcolor: 'background.paper' }}>
             {
@@ -35,8 +34,6 @@ const HomeScreen = () => {
             }
             </List>
         );
-    }
-
     return (
         <div>
             <NavigationBar/>

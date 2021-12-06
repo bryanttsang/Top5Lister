@@ -3,11 +3,7 @@ import { GlobalStoreContext } from '../store'
 import ListCard from './ListCard.js'
 import { List, Typography } from '@mui/material'
 import NavigationBar from './NavigationBar';
-/*
-    This React component lists all the top5 lists in the UI.
-    
-    @author McKilla Gorilla
-*/
+
 export default function ListsScreen() {
     const { store } = useContext(GlobalStoreContext);
 

@@ -22,7 +22,7 @@ export default function SplashScreen() {
             <div>
                 <Typography variant="body1" component="div" align="center" color="black">
                     <br/>
-                    <br/> Create and Publush your own top 5 lists
+                    <br/> Create and publush your own top 5 lists
                     <br/> View other people's top 5 lists
                     <br/> Like or dislike and comment on them
                     <br/>
