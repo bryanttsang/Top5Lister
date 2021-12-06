@@ -1,7 +1,7 @@
-import React, { useContext, useEffect } from 'react'
-import { GlobalStoreContext } from '../store'
-import ListCard from './ListCard.js'
-import { List, IconButton, Typography } from '@mui/material'
+import React, { useContext, useEffect } from 'react';
+import { GlobalStoreContext } from '../store';
+import ListCard from './ListCard.js';
+import { List, IconButton, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import NavigationBar from './NavigationBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -33,19 +33,21 @@ const HomeScreen = () => {
 
     let listCard = "";
         let pairs = store.idNamePairs.filter(pair => pair.email === store.currentUser.email && pair.name.toLowerCase().startsWith(store.search));
-        listCard = (
-            <List sx={{ width: '90%', left: '5%', bgcolor: 'background.paper' }}>
-            {
-                pairs.map((pair) => (
-                    <ListCard
-                        key={pair._id}
-                        idNamePair={pair}
-                        home={true}
-                    />
-                ))
-            }
-            </List>
-        );
+        if (pairs.length) {
+            listCard = (
+                <List sx={{ width: '90%', left: '5%', bgcolor: 'background.paper' }}>
+                {
+                    pairs.map((pair) => (
+                        <ListCard
+                            key={pair._id}
+                            idNamePair={pair}
+                            home={true}
+                        />
+                    ))
+                }
+                </List>
+            );
+        }
 
     const guest = (
         <div>

@@ -13,19 +13,21 @@ export default function UsersScreen() {
 
     let listCard = "";
     let pairs = store.idNamePairs.filter(pair => pair.publish >= 1638316800000 && pair.username.toLowerCase() === store.search.toLowerCase());
-    listCard = (
-        <List sx={{ width: '90%', left: '5%', bgcolor: 'background.paper' }}>
-        {
-            pairs.map((pair) => (
-                <ListCard
-                    key={pair._id}
-                    idNamePair={pair}
-                    home={false}
-                />
-            ))
-        }
-        </List>
-    );
+    if (pairs.length) {
+        listCard = (
+            <List sx={{ width: '90%', left: '5%', bgcolor: 'background.paper' }}>
+            {
+                pairs.map((pair) => (
+                    <ListCard
+                        key={pair._id}
+                        idNamePair={pair}
+                        home={false}
+                    />
+                ))
+            }
+            </List>
+        );
+    }
 
     let statusbar = store.search === "" ? "User Lists" : store.search + " Lists";
 

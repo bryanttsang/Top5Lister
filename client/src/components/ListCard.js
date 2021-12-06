@@ -92,10 +92,7 @@ function ListCard(props) {
                         <Box style={{display:"flex"}}>
                             <Typography>By:&nbsp;</Typography>
                             <Typography
-                                style={{
-                                    textDecoration: 'underline',
-                                    color: 'blue'
-                                }}
+                                style={{ color: 'blue' }}
                                 onClick={(event) => handleUser(event, list.username)}
                             >
                                 {list.username}

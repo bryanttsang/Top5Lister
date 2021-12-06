@@ -16,19 +16,21 @@ export default function ListsScreen() {
     if (store.search !== "") {
         pairs = pairs.filter(pair => pair.name.toLowerCase() === store.search.toLowerCase());
     }
-    listCard = (
-        <List sx={{ width: '90%', left: '5%', bgcolor: 'background.paper' }}>
-        {
-            pairs.map((pair) => (
-                <ListCard
-                    key={pair._id}
-                    idNamePair={pair}
-                    home={false}
-                />
-            ))
-        }
-        </List>
-    );
+    if (pairs.length) {
+        listCard = (
+            <List sx={{ width: '90%', left: '5%', bgcolor: 'background.paper' }}>
+            {
+                pairs.map((pair) => (
+                    <ListCard
+                        key={pair._id}
+                        idNamePair={pair}
+                        home={false}
+                    />
+                ))
+            }
+            </List>
+        );
+    }
 
     let statusbar = store.search === "" ? "All Lists" : store.search + " Lists";
 
