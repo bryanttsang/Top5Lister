@@ -1,5 +1,6 @@
 const Top5List = require('../models/top5list-model');
 const User = require('../models/user-model');
+const Community = require('../models/community-model');
 
 createTop5List = (req, res) => {
     const body = req.body;
@@ -52,6 +53,54 @@ updateTop5List = async (req, res) => {
                 message: 'Top 5 List not found!',
             })
         }
+console.log(body);
+        if (body.publish > 3276633600000) {
+            // update community list
+            // add to count
+            Community.findOne({ name: body.name }, (err, com) => {
+                if (com === null) {
+                    // create new community list
+                    console.log("CREATED NEW");
+                    const items = body.items;
+                    const field = {
+                        name: body.name,
+                        items: [
+                            { item: items[0], point: 5 },
+                            { item: items[1], point: 4 },
+                            { item: items[2], point: 3 },
+                            { item: items[3], point: 2 },
+                            { item: items[4], point: 1 }
+                        ],
+                        like: [],
+                        dislike: [],
+                        comment: [],
+                        view: 0,
+                        publish: Date.now()
+                    };
+                    const newCom = new Community(field);
+                    if (newCom) {
+                        newCom.save().catch(error => { console.log(error); });
+                    }
+                } else {
+                    // community list exists
+                    // update items and publish
+                    console.log("UPDATE EXITING");
+                    for (let i = 0; i < 5; i++) {
+                        let index = com.items.findIndex(pair => pair.item === body.items[i]);
+                        if (index === -1) {
+                            let newItem = { item: body.items[i], point: 5-i };
+                            com.items.push(newItem);
+                        } else {
+                            let newItem = { item: body.items[i], point: com.items[index].point + (5-i)};
+                            com.items.splice(index, 1, newItem);
+                        }
+                    }
+                    com.publish = Date.now();
+                    console.log(com);
+                    com.save().catch(error => { console.log(error); });
+                }
+            });
+        }
 
         top5List.name = body.name
         top5List.items = body.items
@@ -59,7 +108,7 @@ updateTop5List = async (req, res) => {
         top5List.dislike = body.dislike
         top5List.comment = body.comment
         top5List.view = body.view
-        top5List.publish = body.publish
+        top5List.publish = body.publish > 3276633600000 ? body.publish/2 : body.publish
         top5List
             .save()
             .then(() => {
@@ -87,6 +136,10 @@ deleteTop5List = async (req, res) => {
                 err,
                 message: 'Top 5 List not found!',
             })
+        }
+        if (top5List.publish >= 1638316800000) {
+            // update community list
+            // remove from count
         }
         Top5List.findOneAndDelete({ _id: req.params.id }, () => {
             return res.status(200).json({ success: true, data: top5List })

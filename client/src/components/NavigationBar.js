@@ -1,6 +1,5 @@
 import { useContext, useState } from 'react';
 import { GlobalStoreContext } from '../store';
-import AuthContext from '../auth';
 import Toolbar from '@mui/material/Toolbar';
 import SortIcon from '@mui/icons-material/Sort';
 import {Box, TextField, Grid, Button, Menu, MenuItem} from '@mui/material';

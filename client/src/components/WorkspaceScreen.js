@@ -29,7 +29,7 @@ function WorkspaceScreen() {
     }
 
     function handlePublish() {
-        store.publish(Date.now());
+        store.publish(Date.now()*2);
     }
 
     let editItems = "";
