@@ -145,11 +145,17 @@ function ListCard(props) {
                             </Button>
                         </Grid>
                         <Grid item>
-                            <DeleteAlert
-                                idNamePair={idNamePair}
-                                handleToggleDelete={handleToggleDelete}
-                                handleDeleteList={handleDeleteList}
-                            />
+                            {
+                                props.home ? (
+                                    <DeleteAlert
+                                        idNamePair={idNamePair}
+                                        handleToggleDelete={handleToggleDelete}
+                                        handleDeleteList={handleDeleteList}
+                                    />
+                                ) : (
+                                    <></>
+                                )
+                            }
                         </Grid>
                     </Grid>
                     <Grid container columns={3} direction="row">

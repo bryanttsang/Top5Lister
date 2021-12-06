@@ -22,6 +22,7 @@ export default function UsersScreen() {
                 <ListCard
                     key={pair._id}
                     idNamePair={pair}
+                    home={false}
                 />
             ))
         }
