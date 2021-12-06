@@ -78,6 +78,9 @@ function ListCard(props) {
         store.dislike(idNamePair._id, auth.user.username);
     }
 
+    const liked = list.like.includes(auth.user.username) ? {fontSize:'16pt', color: 'blue'} : {fontSize:'16pt', color: 'black'};
+    const disliked = list.dislike.includes(auth.user.username) ? {fontSize:'16pt', color: 'blue'} : {fontSize:'16pt', color: 'black'};
+
     const closed = (
         <Grid container columns={2} justifyContent="space-between">
             <Grid item>
@@ -126,7 +129,7 @@ function ListCard(props) {
                     <Grid container columns={3} direction="row">
                         <Grid item>
                             <Button 
-                                style={{fontSize:'16pt', color: 'black'}} 
+                                style={liked} 
                                 variant="text"
                                 onClick={handleLike} 
                                 startIcon={<ThumbUpOutlinedIcon style={{fontSize:'24pt'}}/>}
@@ -136,7 +139,7 @@ function ListCard(props) {
                         </Grid>
                         <Grid item>
                             <Button 
-                                style={{fontSize:'16pt', color: 'black'}} 
+                                style={disliked} 
                                 variant="text"
                                 onClick={handleDislike} 
                                 startIcon={<ThumbDownOutlinedIcon style={{fontSize:'24pt'}}/>}

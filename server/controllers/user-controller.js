@@ -98,14 +98,12 @@ loginUser  = async (req, res) => {
                 errorMessage: "Please enter all required fields."
             });
         
-        let user = await User.findOne({ email: email });
+        let user = await User.findOne({ username: email });
         if (!user) {
-            user = await User.findOne({ username: email });
-            if (!user)
-                return res.status(400).json({
-                    success: false,
-                    errorMessage: "An account with this email address or username does not exist."
-                });
+            return res.status(400).json({
+                success: false,
+                errorMessage: "An account with this username does not exist."
+            });
         }
         
         const cmp = await bcrypt.compare(password, user.passwordHash);
