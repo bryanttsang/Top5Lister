@@ -110,13 +110,14 @@ function ListCard(props) {
                                     color='red'
                                     style={{textDecoration: 'underline'}}
                                 >
-                                    Edit
+                                    {"Edit - " + (list.publish % 1000000000)}
                                 </Typography>
                             ) : (
                                 <Typography
                                     color='green'
                                 >
                                     {new Date(list.publish).toDateString().substring(4)}
+                                    {" - " + (list.publish % 10000000000)}
                                 </Typography>
                             )
                         }

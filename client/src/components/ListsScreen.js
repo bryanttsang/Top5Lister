@@ -12,7 +12,7 @@ export default function ListsScreen() {
     }, []);
 
     let listCard = "";
-    let pairs = store.idNamePairs.filter(pair => pair.publish > 0);
+    let pairs = store.idNamePairs.filter(pair => pair.publish >= 1638316800000);
     if (store.search !== "") {
         pairs = pairs.filter(pair => pair.name.toLowerCase() === store.search.toLowerCase());
     }

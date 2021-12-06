@@ -592,7 +592,7 @@ function GlobalStoreContextProvider(props) {
         const listIndex = store.allList.findIndex(list => list._id === id);
         let list = store.allList[listIndex];
         let comments = list.comment;
-        comments.push({
+        comments.unshift({
             name: user,
             comment: text
         });

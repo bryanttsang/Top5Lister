@@ -12,7 +12,7 @@ export default function UsersScreen() {
     }, []);
 
     let listCard = "";
-    let pairs = store.idNamePairs.filter(pair => pair.publish > 0 && pair.username.toLowerCase() === store.search.toLowerCase());
+    let pairs = store.idNamePairs.filter(pair => pair.publish >= 1638316800000 && pair.username.toLowerCase() === store.search.toLowerCase());
     listCard = (
         <List sx={{ width: '90%', left: '5%', bgcolor: 'background.paper' }}>
         {
