@@ -53,14 +53,13 @@ updateTop5List = async (req, res) => {
                 message: 'Top 5 List not found!',
             })
         }
-console.log(body);
         if (body.publish > 3276633600000) {
             // update community list
             // add to count
             Community.findOne({ name: body.name }, (err, com) => {
                 if (com === null) {
                     // create new community list
-                    console.log("CREATED NEW");
+                    console.log("CREATING NEW COMMUNITY LIST");
                     const items = body.items;
                     const field = {
                         name: body.name,
@@ -84,7 +83,7 @@ console.log(body);
                 } else {
                     // community list exists
                     // update items and publish
-                    console.log("UPDATE EXITING");
+                    console.log("UPDATING EXISTING COMMUNITY LIST");
                     for (let i = 0; i < 5; i++) {
                         let index = com.items.findIndex(pair => pair.item === body.items[i]);
                         if (index === -1) {
@@ -208,11 +207,73 @@ getTop5ListPairs = async (req, res) => {
     }).catch(err => console.log(err))
 }
 
+ getCommunity = async (req, res) => {
+    await Community.find({}, (err, com) => {
+        if (err) {
+            return res.status(400).json({ success: false, error: err })
+        }
+        if (!com) {
+            return res
+                .status(404)
+                .json({ success: false, error: `Community lists not found` })
+        }
+        return res.status(200).json({ success: true, data: com })
+    }).catch(err => console.log(err))
+}
+
+updateCommunity = async (req, res) => {
+    const body = req.body
+    console.log("updateCommunity: " + JSON.stringify(body));
+    if (!body) {
+        return res.status(400).json({
+            success: false,
+            error: 'You must provide a body to update',
+        })
+    }
+
+    Community.findOne({ _id: req.params.id }, (err, com) => {
+        console.log("Community List found: " + JSON.stringify(com));
+        if (err) {
+            return res.status(404).json({
+                err,
+                message: 'Community List not found!',
+            })
+        }
+
+        com.items = body.items
+        com.like = body.like
+        com.dislike = body.dislike
+        com.comment = body.comment
+        com.view = body.view
+        com.publish = body.publish
+        com
+            .save()
+            .then(() => {
+                console.log("SUCCESS!!!");
+                return res.status(200).json({
+                    success: true,
+                    id: com._id,
+                    message: 'Community List updated!',
+                })
+            })
+            .catch(error => {
+                console.log("FAILURE: " + JSON.stringify(error));
+                return res.status(404).json({
+                    error,
+                    message: 'Community List not updated!',
+                })
+            })
+    })
+}
+
 module.exports = {
     createTop5List,
     updateTop5List,
     deleteTop5List,
     getTop5Lists,
     getTop5ListPairs,
-    getTop5ListById
+    getTop5ListById,
+
+    getCommunity,
+    updateCommunity
 }

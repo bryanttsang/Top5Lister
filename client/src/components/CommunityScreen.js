@@ -1,7 +1,7 @@
-import React, { useContext, useEffect } from 'react';
-import { GlobalStoreContext } from '../store';
-import ListCard from './ListCard.js';
-import { List, Typography } from '@mui/material';
+import React, { useContext, useEffect } from 'react'
+import { GlobalStoreContext } from '../store'
+import CommunityCard from './CommunityCard.js'
+import { List, Typography } from '@mui/material'
 import NavigationBar from './NavigationBar';
 
 export default function CommunityScreen() {
@@ -12,20 +12,21 @@ export default function CommunityScreen() {
     }, []);
 
     let listCard = "";
-    let pairs = store.idNamePairs.filter(pair => pair.publish >= 1638316800000 && pair.username.toLowerCase() === store.search.toLowerCase());
-    listCard = (
-        <List sx={{ width: '90%', left: '5%', bgcolor: 'background.paper' }}>
-        {
-            pairs.map((pair) => (
-                <ListCard
-                    key={pair._id}
-                    idNamePair={pair}
-                    home={false}
-                />
-            ))
-        }
-        </List>
-    );
+    const lists = store.community.filter(list => store.search === "" || list.name.toLowerCase() === store.search.toLowerCase());
+    if (lists.length) {
+        listCard = (
+            <List sx={{ width: '90%', left: '5%', bgcolor: 'background.paper' }}>
+            {
+                lists.map((list) => (
+                    <CommunityCard
+                        key={list._id}
+                        list={list}
+                    />
+                ))
+            }
+            </List>
+        );
+    }
 
     let statusbar = store.search === "" ? "Community Lists" : store.search + " Lists";
 

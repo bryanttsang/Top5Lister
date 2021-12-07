@@ -1,7 +1,6 @@
 import { useContext, useState } from 'react';
 import { GlobalStoreContext } from '../store';
 import AuthContext from '../auth';
-import DeleteAlert from './DeleteAlert.js';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Accordion from '@mui/material/Accordion';
@@ -14,37 +13,24 @@ import Button from '@mui/material/Button';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
 
-/*
-    This is a card in our list of top 5 lists. It lets select
-    a list for editing and it has controls for changing its 
-    name or deleting it.
-    
-    @author McKilla Gorilla
-*/
-function ListCard(props) {
+function CommunityCard(props) {
     const { auth } = useContext(AuthContext);
     const { store } = useContext(GlobalStoreContext);
     const [expanded, setExpanded] = useState(false);
     const [text, setText] = useState("");
-    const { idNamePair } = props;
-    const listIndex = store.allList.findIndex(list => list._id === idNamePair._id);
-    const list = store.allList[listIndex];
-
-    function handleLoadList(event, id) {
-        event.stopPropagation();
-        store.setCurrentList(id);
-    }
+    const { list } = props;
+    const pairs = list.items.sort((a, b) => (b.point - a.point)).slice(0, 5);
 
     function handleChange() {
         if (!expanded) {
-            store.view(idNamePair._id);
+            store.viewCom(list);
         }
         setExpanded(!expanded);
     }
 
     function handleComment(event) {
         if (event.code === "Enter" && text.trim() !== "") {
-            store.comment(idNamePair._id, auth.user.username, text);
+            store.commentCom(list, auth.user.username, text);
             setText("");
         }
     }
@@ -53,24 +39,14 @@ function ListCard(props) {
         setText(event.target.value);
     }
 
-    function handleToggleDelete(event, id) {
-        event.stopPropagation();
-        store.markListForDeletion(id);
-    }
-
-    function handleDeleteList(event) {
-        event.stopPropagation();
-        store.deleteMarkedList();
-    }
-
     function handleLike(event) {
         event.stopPropagation();
-        store.like(idNamePair._id, auth.user.username);
+        store.likeCom(list, auth.user.username);
     }
 
     function handleDislike(event) {
         event.stopPropagation();
-        store.dislike(idNamePair._id, auth.user.username);
+        store.dislikeCom(list, auth.user.username);
     }
 
     const liked = list.like.includes(auth.user.username) ? {fontSize:'16pt', color: 'blue'} : {fontSize:'16pt', color: 'black'};
@@ -81,34 +57,16 @@ function ListCard(props) {
             <Grid item>
                 <Grid container columns={1} direction="column">
                     <Grid item>
-                        <Typography variant='h5'>{idNamePair.name}</Typography>
+                        <Typography variant='h5'>{list.name}</Typography>
+                    </Grid>
+                    <Grid item>
+                        <br/>
                     </Grid>
                     <Grid item>
                         <Box style={{display:"flex"}}>
-                            <Typography>By:&nbsp;</Typography>
-                            <Typography style={{ color: 'blue' }}> {list.username} </Typography>
+                            <Typography>Updated:&nbsp;</Typography>
+                            <Typography style={{ color: 'green' }}> {new Date(list.publish).toDateString().substring(4)} </Typography>
                         </Box>
-                    </Grid>
-                    <Grid item>
-                        {
-                            list.publish < 1638316800000 ? (
-                                <Typography
-                                    onClick={(event) => handleLoadList(event, idNamePair._id)}
-                                    color='red'
-                                    style={{textDecoration: 'underline'}}
-                                >
-                                    {"Edit - " + (list.publish % 1000000000)}
-                                </Typography>
-                            ) : (
-                                <Typography
-                                    color='green'
-                                >
-                                    {new Date(list.publish).toDateString().substring(4)}
-                                    {" - " + (list.publish % 10000000000)}
-                                </Typography>
-                            )
-                        }
-                        
                     </Grid>
                 </Grid>
             </Grid>
@@ -119,7 +77,7 @@ function ListCard(props) {
                             {
                                 store.currentUser && store.currentUser.username === "nu11" ? (
                                     <Button 
-                                        style={{fontSize:'16pt', color: 'black'}}
+                                        style={{fontSize:'16pt', color: 'gray'}}
                                         variant="text"
                                         disabled
                                         startIcon={<ThumbUpOutlinedIcon style={{fontSize:'24pt'}}/>}
@@ -142,7 +100,7 @@ function ListCard(props) {
                             {
                                 store.currentUser && store.currentUser.username === "nu11" ? (
                                     <Button 
-                                        style={{fontSize:'16pt', color: 'black'}}
+                                        style={{fontSize:'16pt', color: 'gray'}}
                                         variant="text"
                                         disabled
                                         startIcon={<ThumbDownOutlinedIcon style={{fontSize:'24pt'}}/>}
@@ -163,17 +121,7 @@ function ListCard(props) {
                             
                         </Grid>
                         <Grid item>
-                            {
-                                props.home ? (
-                                    <DeleteAlert
-                                        idNamePair={idNamePair}
-                                        handleToggleDelete={handleToggleDelete}
-                                        handleDeleteList={handleDeleteList}
-                                    />
-                                ) : (
-                                    <></>
-                                )
-                            }
+                            { <></> }
                         </Grid>
                     </Grid>
                     <Grid container columns={3} direction="row">
@@ -197,8 +145,8 @@ function ListCard(props) {
                         <Grid item>
                             <Grid container columns={1} direction="column" minWidth='32pt'>
                                 {
-                                    list.items.map((item, index) => (
-                                        <Grid item height="48pt" key={idNamePair._id + "index" + String(index+1)}>
+                                    pairs.map((item, index) => (
+                                        <Grid item height="48pt" key={list._id + "index" + String(index+1)}>
                                             <Typography variant="h4" style={{color: "yellow"}}>{index+1}.</Typography>
                                         </Grid>
                                     ))
@@ -208,9 +156,9 @@ function ListCard(props) {
                         <Grid item>
                             <Grid container columns={1} direction="column">
                                 {
-                                    list.items.map((item, index) => (
-                                        <Grid item height="48pt" key={idNamePair._id + String(index+1)}>
-                                            <Typography variant="h4" style={{color: "yellow"}}>{item}</Typography>
+                                    pairs.map((item, index) => (
+                                        <Grid item height="48pt" key={list._id + String(index+1)}>
+                                            <Typography variant="h4" style={{color: "yellow"}}>{item.item}</Typography>
                                         </Grid>
                                     ))
                                 }
@@ -226,7 +174,7 @@ function ListCard(props) {
                             <div className="list-comment">
                             {
                                 list.comment.map((item, index) => (
-                                    <Box sx={{m:1, p:1, border: 1, borderRadius: '5%', bgcolor:"yellow"}} key={idNamePair._id + "comment" + String(index)}>
+                                    <Box sx={{m:1, p:1, border: 1, borderRadius: '5%', bgcolor:"yellow"}} key={list._id + "comment" + String(index)}>
                                         <Typography variant="caption">{item.name}</Typography>
                                         <Typography variant="body1">{item.comment}</Typography>
                                     </Box>
@@ -268,8 +216,8 @@ function ListCard(props) {
     
     return (
         <Accordion
-            id={idNamePair._id}
-            key={idNamePair._id}
+            id={list._id}
+            key={list._id}
             onChange={handleChange}
         >
             <AccordionSummary
@@ -284,4 +232,4 @@ function ListCard(props) {
     );
 }
 
-export default ListCard;
+export default CommunityCard;

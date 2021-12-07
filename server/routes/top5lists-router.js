@@ -15,4 +15,7 @@ router.post('/register', UserController.registerUser)
 router.get('/loggedIn', UserController.getLoggedIn)
 router.post('/login/', UserController.loginUser)
 router.get('/logout/', UserController.logoutUser)
+
+router.get('/communities', Top5ListController.getCommunity)
+router.put('/community/:id', Top5ListController.updateCommunity)
 module.exports = router
