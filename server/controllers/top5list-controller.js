@@ -56,13 +56,13 @@ updateTop5List = async (req, res) => {
         if (body.publish > 3276633600000) {
             // update community list
             // add to count
-            Community.findOne({ name: body.name }, (err, com) => {
+            Community.findOne({ name: body.name.toLowerCase() }, (err, com) => {
                 if (com === null) {
                     // create new community list
-                    console.log("CREATING NEW COMMUNITY LIST");
+                    console.log("CREATED NEW COMMUNITY LIST");
                     const items = body.items;
                     const field = {
-                        name: body.name,
+                        name: body.name.toLowerCase(),
                         items: [
                             { item: items[0], point: 5 },
                             { item: items[1], point: 4 },
@@ -83,7 +83,7 @@ updateTop5List = async (req, res) => {
                 } else {
                     // community list exists
                     // update items and publish
-                    console.log("UPDATING EXISTING COMMUNITY LIST");
+                    console.log("UPDATED EXISTING COMMUNITY LIST");
                     for (let i = 0; i < 5; i++) {
                         let index = com.items.findIndex(pair => pair.item === body.items[i]);
                         if (index === -1) {
@@ -95,7 +95,6 @@ updateTop5List = async (req, res) => {
                         }
                     }
                     com.publish = Date.now();
-                    console.log(com);
                     com.save().catch(error => { console.log(error); });
                 }
             });
@@ -139,6 +138,31 @@ deleteTop5List = async (req, res) => {
         if (top5List.publish >= 1638316800000) {
             // update community list
             // remove from count
+            Community.findOne({ name: top5List.name.toLowerCase() }, (err, com) => {
+                if (com) {
+                    // edit community list
+                    let items = com.items;
+                    for (let i = 0; i < 5; i++) {
+                        let index = items.findIndex(pair => pair.item === top5List.items[i]);
+                        if (items[index].point - (5-i) == 0) {
+                            items.splice(index, 1);
+                        } else {
+                            let newItem = { item: items[index].item, point: items[index].point - (5-i) };
+                            items.splice(index, 1, newItem);
+                        }
+                    }
+                    if (items.length == 0) {
+                        console.log("DELETED EXISTING COMMUNITY LIST");
+                        Community.findOneAndDelete({ _id: com._id }).catch(err => console.log(err));
+                    } else {
+                        console.log("UPDATED EXISTING COMMUNITY LIST");
+                        com.items = items;
+                        com.publish = Date.now();
+                        console.log(com);
+                        com.save().catch(error => { console.log(error); });
+                    }
+                }
+            });
         }
         Top5List.findOneAndDelete({ _id: req.params.id }, () => {
             return res.status(200).json({ success: true, data: top5List })

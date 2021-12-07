@@ -504,6 +504,13 @@ function GlobalStoreContextProvider(props) {
         }
     }
 
+    store.setSearch = function (text) {
+        storeReducer({
+            type: GlobalStoreActionType.SEARCH,
+            payload: text
+        });
+    }
+
     // THE FOLLOWING 5 FUNCTIONS ARE FOR COORDINATING THE DELETION
     // OF A LIST, WHICH INCLUDES USING A VERIFICATION MODAL. THE
     // FUNCTIONS ARE markListForDeletion, deleteList, deleteMarkedList,
