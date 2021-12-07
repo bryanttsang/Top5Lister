@@ -118,7 +118,7 @@ function ListCard(props) {
                             {
                                 store.currentUser && store.currentUser.username === "nu11" ? (
                                     <Button 
-                                        style={{fontSize:'16pt', color: 'black'}}
+                                        style={{fontSize:'16pt', color: 'gray'}}
                                         variant="text"
                                         disabled
                                         startIcon={<ThumbUpOutlinedIcon style={{fontSize:'24pt'}}/>}
@@ -141,7 +141,7 @@ function ListCard(props) {
                             {
                                 store.currentUser && store.currentUser.username === "nu11" ? (
                                     <Button 
-                                        style={{fontSize:'16pt', color: 'black'}}
+                                        style={{fontSize:'16pt', color: 'gray'}}
                                         variant="text"
                                         disabled
                                         startIcon={<ThumbDownOutlinedIcon style={{fontSize:'24pt'}}/>}

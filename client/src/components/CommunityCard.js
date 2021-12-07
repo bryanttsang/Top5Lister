@@ -159,6 +159,7 @@ function CommunityCard(props) {
                                     pairs.map((item, index) => (
                                         <Grid item height="48pt" key={list._id + String(index+1)}>
                                             <Typography variant="h4" style={{color: "yellow"}}>{item.item}</Typography>
+                                            <Typography variant="body2" style={{color: "white"}}>{" (" + item.point + " points)"}</Typography>
                                         </Grid>
                                     ))
                                 }
